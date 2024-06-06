@@ -142,7 +142,7 @@
       <div class="card-tips">请保证照片中身份证信息清晰，漏出手臂。</div>
     </div>
 
-    <div class="warning">温馨提示：小鱼游承诺所有信息严格保密</div>
+    <div class="warning">温馨提示：有播甄选承诺所有信息严格保密</div>
 
     <div
       class="submit-btn"
