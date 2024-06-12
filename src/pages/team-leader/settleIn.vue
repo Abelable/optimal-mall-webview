@@ -217,7 +217,7 @@ const nextStep = () => {
   switch (step.value) {
     case 0:
       if (!agreementsChecked.value) {
-        showToast("请阅读并同意商家协议");
+        showToast("请阅读并同意团长服务协议");
         return;
       }
       step.value = 1;
@@ -242,6 +242,10 @@ const nextStep = () => {
       }
       if (!teamLeaderInfo.idCardBackPhoto) {
         showToast("请上传身份证反面照片");
+        return;
+      }
+      if (!teamLeaderInfo.holdIdCardPhoto) {
+        showToast("请上传手持身份证照片");
         return;
       }
       if (
@@ -290,11 +294,28 @@ const uploadHoldIdCardPhoto = (async ({ file }: { file: File }) => {
   uploadHoldIdCardPhotoLoading.value = false;
 }) as UploaderAfterRead;
 
-const checkAgreement = () => router.push("/shop/agreements/provider_service");
+const checkAgreement = () => router.push("/agreements/team_leader_service");
 
 const reApply = async () => {
   try {
-    await reapplyTeamLeader();
+    const {
+      name,
+      mobile,
+      email,
+      idCardNumber,
+      idCardFrontPhoto,
+      idCardBackPhoto,
+      holdIdCardPhoto,
+      qualificationPhoto,
+    } = await reapplyTeamLeader();
+    teamLeaderInfo.name = name;
+    teamLeaderInfo.mobile = mobile;
+    teamLeaderInfo.email = email;
+    teamLeaderInfo.idCardNumber = idCardNumber;
+    teamLeaderInfo.idCardFrontPhoto = idCardFrontPhoto;
+    teamLeaderInfo.idCardBackPhoto = idCardBackPhoto;
+    teamLeaderInfo.holdIdCardPhoto = holdIdCardPhoto;
+    teamLeaderInfo.qualificationPhoto = qualificationPhoto;
     setStatusInfo();
   } catch (error) {
     showToast("操作失败请重试");
