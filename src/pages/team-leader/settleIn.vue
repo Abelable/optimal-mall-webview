@@ -453,11 +453,39 @@ const back = () => {
               margin-top: 0.2rem;
               display: flex;
               justify-content: space-between;
-              .photo {
+              .photo,
+              .default-img,
+              .loading-wrap {
                 width: 3.3rem;
                 height: 2.14rem;
                 box-shadow: 0 0 10px 0 #e6e6e6;
                 border-radius: 0.24rem;
+              }
+              .default-img {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                .img-wrap {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  width: 1rem;
+                  height: 1rem;
+                  background: rgba(0, 0, 0, 0.6);
+                  border-radius: 50%;
+                }
+                .desc {
+                  margin-top: 0.3rem;
+                  color: #000;
+                  font-size: 0.2rem;
+                }
+              }
+              .loading-wrap {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(0, 0, 0, 0.6);
               }
             }
           }
