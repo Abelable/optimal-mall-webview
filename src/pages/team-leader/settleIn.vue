@@ -135,13 +135,13 @@
       </div>
     </div>
     <div class="status" v-else>
-      <div class="status-illus" v-if="statusInfo.status !== 1">
+      <div class="status-illus">
         <img
           class="illus"
           :src="
             statusInfo.status === 0
               ? require('@/assets/images/wait.png')
-              : statusInfo.status === 2
+              : statusInfo.status === 1
               ? require('@/assets/images/success.png')
               : require('@/assets/images/fail.png')
           "
@@ -151,7 +151,7 @@
           {{
             statusInfo.status === 0
               ? "等待审核"
-              : statusInfo.status === 2
+              : statusInfo.status === 1
               ? "申请成功"
               : "审核失败"
           }}
@@ -160,7 +160,7 @@
           {{
             statusInfo.status === 0
               ? "已提交申请，请耐心等待平台人员处理"
-              : statusInfo.status === 2
+              : statusInfo.status === 1
               ? "恭喜您已成为有播甄选团长"
               : `失败原因：${statusInfo.failureReason}`
           }}
