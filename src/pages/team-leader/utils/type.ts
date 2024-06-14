@@ -1,3 +1,5 @@
+import type { UploaderFileListItem } from "vant";
+
 export interface TeamLeaderInfo {
   name: string;
   mobile: string;
@@ -7,6 +9,11 @@ export interface TeamLeaderInfo {
   idCardBackPhoto: string;
   holdIdCardPhoto: string;
   qualificationPhoto: string[];
+}
+
+export interface FormTeamLeaderInfo
+  extends Omit<TeamLeaderInfo, "qualificationPhoto"> {
+  qualificationPhoto: UploaderFileListItem[];
 }
 
 export interface TeamLeaderStatusInfo {

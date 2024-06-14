@@ -190,13 +190,13 @@ import {
 } from "./utils/api";
 
 import type { UploaderAfterRead } from "vant/lib/uploader/types";
-import type { TeamLeaderInfo, TeamLeaderStatusInfo } from "./utils/type";
+import type { FormTeamLeaderInfo, TeamLeaderStatusInfo } from "./utils/type";
 
 const router = useRouter();
 
 const step = ref(0);
 const agreementsChecked = ref(false);
-const teamLeaderInfo = reactive<TeamLeaderInfo>({
+const teamLeaderInfo = reactive<FormTeamLeaderInfo>({
   name: "",
   mobile: "",
   email: "",
@@ -264,6 +264,10 @@ const nextStep = () => {
         showToast("请输入正确电子邮箱");
         return;
       }
+      if (!teamLeaderInfo.qualificationPhoto.length) {
+        showToast("请上传团长资质照片");
+        return;
+      }
       submit();
       break;
   }
@@ -275,7 +279,11 @@ const setStatusInfo = async () => {
 
 const submit = async () => {
   try {
-    await uploadTeamLeaderInfo(teamLeaderInfo);
+    const { qualificationPhoto, ...rest } = teamLeaderInfo;
+    await uploadTeamLeaderInfo({
+      qualificationPhoto: qualificationPhoto.map((item) => item.url || ""),
+      ...rest,
+    });
     setStatusInfo();
   } catch (error) {
     showToast("审核提交失败，请重试");
