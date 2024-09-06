@@ -9,14 +9,6 @@ const agreements: Array<RouteRecordRaw> = [
     },
     component: () => import("@/pages/agreements/userService.vue"),
   },
-  {
-    path: "/agreements/team_leader_service",
-    name: "team_leader_service",
-    meta: {
-      title: "团长服务协议",
-    },
-    component: () => import("@/pages/agreements/teamLeaderService.vue"),
-  },
 ];
 
 export default agreements;

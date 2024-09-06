@@ -1,7 +1,16 @@
 import { RouteRecordRaw } from "vue-router";
 import agreements from "./agreements";
-import teamLeader from "./teamLeader";
 
-const routes: Array<RouteRecordRaw> = [...agreements, ...teamLeader];
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: "/auth",
+    name: "auth",
+    meta: {
+      title: "实名认证",
+    },
+    component: () => import("@/pages/auth/index.vue"),
+  },
+  ...agreements,
+];
 
 export default routes;
