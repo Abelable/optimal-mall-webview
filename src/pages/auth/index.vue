@@ -354,7 +354,7 @@ const submit = async () => {
 
 .warning {
   margin-top: 0.24rem;
-  color: #ba9243;
+  color: #f5701d;
   font-size: 0.28rem;
   text-align: center;
 }
@@ -366,10 +366,10 @@ const submit = async () => {
   margin: 0.5rem auto 0;
   width: 6rem;
   height: 0.88rem;
-  color: #ffe5bd;
+  color: #fff;
   font-size: 0.32rem;
   font-weight: 500;
-  background: linear-gradient(128deg, #404a5c 0%, #0f131a 100%);
+  background: #f5701d;
   border-radius: 0.44rem;
 }
 </style>
