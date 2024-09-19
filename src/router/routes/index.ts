@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from "vue-router";
 import agreements from "./agreements";
+import team from "./team";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -11,6 +12,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/pages/auth/index.vue"),
   },
   ...agreements,
+  ...team,
 ];
 
 export default routes;
