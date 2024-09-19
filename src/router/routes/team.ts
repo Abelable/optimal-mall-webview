@@ -9,6 +9,14 @@ const team: Array<RouteRecordRaw> = [
     },
     component: () => import("@/pages/team/index.vue"),
   },
+  {
+    path: "/team/promoter",
+    name: "team",
+    meta: {
+      title: "我的推广员",
+    },
+    component: () => import("@/pages/team/subpages/promoter.vue"),
+  },
 ];
 
 export default team;
