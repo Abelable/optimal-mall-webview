@@ -15,7 +15,7 @@
             <span style="font-size: 0.32rem">¥</span>
             <span>{{
               cashInfo
-                ? (cashInfo?.selfPurchase + cashInfo?.share).toFixed(2)
+                ? (+cashInfo?.share + +cashInfo?.team).toFixed(2)
                 : "0.00"
             }}</span>
           </div>
@@ -27,16 +27,14 @@
           <div class="amount-type-name">分享奖励</div>
           <div class="type-amount">
             <span style="font-size: 0.28rem">¥</span>
-            <span>{{
-              cashInfo ? cashInfo.selfPurchase.toFixed(2) : "0.00"
-            }}</span>
+            <span>{{ cashInfo ? cashInfo.share : "0.00" }}</span>
           </div>
         </div>
         <div class="amount-type-item">
           <div class="amount-type-name">团队奖励</div>
           <div class="type-amount">
             <span style="font-size: 0.28rem">¥</span>
-            <span>{{ cashInfo ? cashInfo.share.toFixed(2) : "0.00" }}</span>
+            <span>{{ cashInfo ? cashInfo.team : "0.00" }}</span>
           </div>
         </div>
       </div>
@@ -53,7 +51,7 @@
         class="menu-tab"
         :class="{ active: curMenuIdx === index }"
         v-for="(item, index) in level > 1
-          ? ['团队奖励', '分享奖励']
+          ? ['分享奖励', '团队奖励']
           : ['分享奖励']"
         :key="index"
         @click="selectMenu(index)"
@@ -85,19 +83,19 @@
         </div>
         <div class="daily-data-item">
           <div class="daily-data">
-            {{ timeData ? timeData.salesVolume.toFixed(2) : "0.00" }}
+            {{ timeData ? (+timeData.salesVolume).toFixed(2) : "0.00" }}
           </div>
           <div class="daily-data-desc">销售额</div>
         </div>
         <div class="daily-data-item">
           <div class="daily-data">
-            {{ timeData ? timeData.pendingAmount.toFixed(2) : "0.00" }}
+            {{ timeData ? timeData.pendingAmount : "0.00" }}
           </div>
           <div class="daily-data-desc">待结算金额</div>
         </div>
         <div class="daily-data-item">
           <div class="daily-data">
-            {{ timeData ? timeData.settledAmount.toFixed(2) : "0.00" }}
+            {{ timeData ? timeData.settledAmount : "0.00" }}
           </div>
           <div class="daily-data-desc">已结算金额</div>
         </div>
@@ -152,17 +150,42 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import type { CashInfo, Order, TimeData } from "../utils/type";
-import dayjs from "dayjs";
 import { Empty } from "vant";
 
-const level = ref(2);
-const cashInfo = ref<CashInfo>();
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import dayjs from "dayjs";
+import {
+  getCommissionCashInfo,
+  getGiftCommissionTimeData,
+  getTeamCommissionTimeData,
+} from "../utils/api";
+
+import type {
+  CommissionCashInfo,
+  Order,
+  CommissionTimeData,
+} from "../utils/type";
+
+const route = useRoute();
+
+const level = ref(1);
+const cashInfo = ref<CommissionCashInfo>();
 const curMenuIdx = ref(0);
 const curDateIdx = ref(0);
-const timeData = ref<TimeData>();
+const timeData = ref<CommissionTimeData>();
+
 const orderList = ref<Order[]>([]);
+
+onMounted(() => {
+  level.value = +(route.query?.level as string);
+  setCommissionCashInfo();
+  setTimeData();
+});
+
+const setCommissionCashInfo = async () => {
+  cashInfo.value = await getCommissionCashInfo();
+};
 
 const withdraw = () => {
   console.log("withdraw");
@@ -172,9 +195,18 @@ const checkWithdrawRecord = () => {
 };
 const selectMenu = (index: number) => {
   curMenuIdx.value = index;
+  setTimeData();
 };
 const selectDate = (index: number) => {
   curDateIdx.value = index;
+  setTimeData();
+};
+const setTimeData = async () => {
+  if (curMenuIdx.value === 0) {
+    timeData.value = await getGiftCommissionTimeData(curDateIdx.value + 1);
+  } else {
+    timeData.value = await getTeamCommissionTimeData(curDateIdx.value + 1);
+  }
 };
 const checkOrderDetail = (orderSn: string) => {
   console.log("orderSn", orderSn);

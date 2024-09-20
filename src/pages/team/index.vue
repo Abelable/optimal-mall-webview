@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="user-info-wrap">
+    <!-- <div class="user-info-wrap">
       <img class="avatar" :src="userInfo?.avatar" />
       <div class="user-info">
         <div class="user-name">
@@ -13,7 +13,7 @@
           }}
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="upgradation-wrap">
       <div class="progress-desc">
         <span>距离C1，仅差</span>
@@ -31,24 +31,24 @@
     <div class="account-amount">
       <div class="account-amount-header">
         <div class="account-amount-title">我的账户</div>
-        <div class="withdraw-btn" bindtap="withdraw">提现</div>
+        <div class="withdraw-btn" @click="withdraw">提现</div>
       </div>
       <div class="amount-list">
         <div class="amount-item">
           <div class="amount">
-            {{ commissionSumInfo?.cashAmount.toFixed(2) || "0.00" }}
+            {{ commissionSumInfo?.cashAmount || "0.00" }}
           </div>
           <div class="amount-desc">可提现金额</div>
         </div>
         <div class="amount-item">
           <div class="amount">
-            {{ commissionSumInfo?.pendingAmount.toFixed(2) || "0.00" }}
+            {{ commissionSumInfo?.pendingAmount || "0.00" }}
           </div>
           <div class="amount-desc">待结算金额</div>
         </div>
         <div class="amount-item">
           <div class="amount">
-            {{ commissionSumInfo?.settledAmount.toFixed(2) || "0.00" }}
+            {{ commissionSumInfo?.settledAmount || "0.00" }}
           </div>
           <div class="amount-desc">累积已结算金额</div>
         </div>
@@ -82,10 +82,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { getUserInfo } from "./utils/api";
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+import {
+  getCommissionSumInfo,
+  getPromoterData,
+  getUserInfo,
+} from "./utils/api";
 
 import type { CommissionSumInfo, PromoterData, UserInfo } from "./utils/type";
+
+const router = useRouter();
 
 const userInfo = ref<UserInfo>();
 const commissionSumInfo = ref<CommissionSumInfo>();
@@ -93,19 +100,30 @@ const promoterData = ref<PromoterData>();
 
 onMounted(() => {
   setUserInfo();
+  setCommissionSumInfo();
+  setPromoterData();
 });
 
-const mobile = computed(
-  () =>
-    userInfo.value &&
-    `${userInfo.value?.mobile.slice(0, 3)}****${userInfo.value?.mobile.slice(
-      -4
-    )}`
-);
+// const mobile = computed(
+//   () =>
+//     userInfo.value &&
+//     `${userInfo.value?.mobile.slice(0, 3)}****${userInfo.value?.mobile.slice(
+//       -4
+//     )}`
+// );
 
 const setUserInfo = async () => {
   userInfo.value = await getUserInfo();
 };
+const setCommissionSumInfo = async () => {
+  commissionSumInfo.value = await getCommissionSumInfo();
+};
+const setPromoterData = async () => {
+  promoterData.value = await getPromoterData();
+};
+
+const withdraw = () =>
+  router.push(`/team/account?level=${userInfo.value?.level}`);
 </script>
 
 <style lang="scss" scoped>
@@ -153,7 +171,6 @@ const setUserInfo = async () => {
     }
   }
   .upgradation-wrap {
-    margin-top: 0.24rem;
     padding: 0 0.24rem;
     height: 2rem;
     background-image: url("./images/upgradation-bg.png");

@@ -19,12 +19,12 @@ export interface PromoterData {
   totalCount: number;
 }
 
-export interface CashInfo {
-  selfPurchase: number;
+export interface CommissionCashInfo {
   share: number;
+  team: number;
 }
 
-export interface TimeData {
+export interface CommissionTimeData {
   orderCount: number;
   salesVolume: number;
   pendingAmount: number;
