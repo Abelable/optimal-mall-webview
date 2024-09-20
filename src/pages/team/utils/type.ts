@@ -18,3 +18,29 @@ export interface PromoterData {
   todayOrderingCount: number;
   totalCount: number;
 }
+
+export interface CashInfo {
+  selfPurchase: number;
+  share: number;
+}
+
+export interface TimeData {
+  orderCount: number;
+  salesVolume: number;
+  pendingAmount: number;
+  settledAmount: number;
+}
+
+export interface Order {
+  orderSn: string;
+  status: number;
+  createdAt: string;
+  commission: number;
+  scene: number;
+  goodsList: {
+    cover: string;
+    name: string;
+    selectedSkuName: string;
+    commission: number;
+  }[];
+}
