@@ -224,14 +224,18 @@ const withdraw = () => {
 const checkWithdrawRecord = () => {
   console.log("checkWithdrawRecord");
 };
+
 const selectMenu = (index: number) => {
   curMenuIdx.value = index;
   setTimeData();
+  setOrderList(true);
 };
 const selectDate = (index: number) => {
   curDateIdx.value = index;
   setTimeData();
+  setOrderList(true);
 };
+
 const setTimeData = async () => {
   if (curMenuIdx.value === 0) {
     timeData.value = await getGiftCommissionTimeData(curDateIdx.value + 1);
