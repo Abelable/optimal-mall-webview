@@ -46,6 +46,7 @@
         </div>
       </div>
     </div>
+
     <div class="menu-tabs">
       <div
         class="menu-tab"
@@ -64,6 +65,7 @@
         />
       </div>
     </div>
+
     <div class="daily-data-wrap">
       <div class="date-menu">
         <div
@@ -101,56 +103,77 @@
         </div>
       </div>
     </div>
-    <div class="sales-record-list" v-if="orderList.length">
-      <div
-        class="sales-record-item"
-        v-for="(item, index) in orderList"
-        :key="index"
+
+    <PullRefresh class="container" v-model="refreshing" @refresh="onRefresh">
+      <List
+        class="sales-record-list"
+        v-model="loading"
+        :finished="finished"
+        @load="onLoadMore"
+        :finished-text="orderList.length ? '没有更多了' : ''"
       >
-        <div class="order-info">
-          <div class="order-sn-wrap">
-            <div class="order-sn" @click="checkOrderDetail(item.orderSn)">
-              <div>订单编号：{{ item.orderSn }}</div>
-              <img class="order-sn-arrow" src="../images/arrow.png" />
-            </div>
-            <div class="order-status-wrap">
-              <div class="order-status">
-                {{ ["待结算", "待提现", "已结算"][item.status - 1] }}
+        <div
+          class="sales-record-item"
+          v-for="(item, index) in orderList"
+          :key="index"
+        >
+          <div class="order-info">
+            <div class="order-sn-wrap">
+              <div class="order-sn" @click="checkOrderDetail(item.orderSn)">
+                <div>订单编号：{{ item.orderSn }}</div>
+                <img class="order-sn-arrow" src="../images/arrow.png" />
               </div>
-              <div class="order-time">
-                下单时间：{{ dayjs(item.createdAt).format("YYYY.MM.DD") }}
+              <div class="order-status-wrap">
+                <div class="order-status">
+                  {{ ["待结算", "待提现", "已结算"][item.status - 1] }}
+                </div>
+                <div class="order-time">
+                  下单时间：{{ dayjs(item.createdAt).format("YYYY.MM.DD") }}
+                </div>
+              </div>
+            </div>
+            <div class="order-commission-wrap">
+              <div class="order-commission">+{{ item.commission }}</div>
+              <div class="order-type">
+                {{ curMenuIdx === 0 ? "分享" : "团队" }}
               </div>
             </div>
           </div>
-          <div class="order-commission-wrap">
-            <div class="order-commission">+{{ item.commission }}</div>
-            <div class="order-type">
-              {{ item.scene === 1 ? "团队" : "分享" }}
+          <div class="goods-list" v-if="curMenuIdx === 0">
+            <div
+              class="goods-info-wrap"
+              v-for="(goods, goodsIdx) in item.goodsList"
+              :key="goodsIdx"
+            >
+              <img class="goods-cover" :src="goods.cover" />
+              <div class="goods-info">
+                <div class="goods-name omit">{{ goods.name }}</div>
+                <div class="goods-spec">{{ goods.selectedSkuName }}</div>
+                <div class="goods-commission">返现¥{{ goods.commission }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="goods-list" v-if="curMenuIdx === 1">
+            <div class="goods-info-wrap">
+              <img class="goods-cover" :src="item.goods?.cover" />
+              <div class="goods-info">
+                <div class="goods-name omit">{{ item.goods?.name }}</div>
+                <div class="goods-spec">{{ item.goods?.selectedSkuName }}</div>
+                <div class="goods-commission">
+                  返现¥{{ item.goods?.commission }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="goods-list">
-          <div
-            class="goods-info-wrap"
-            v-for="(goods, goodsIdx) in item.goodsList"
-            :key="goodsIdx"
-          >
-            <img class="goods-cover" :src="goods.cover" />
-            <div class="goods-info">
-              <div class="goods-name omit">{{ goods.name }}</div>
-              <div class="goods-spec">{{ goods.selectedSkuName }}</div>
-              <div class="goods-commission">返现¥{{ goods.commission }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <Empty v-if="!orderList.length" description="暂无订单记录" />
+      </List>
+      <Empty v-if="!orderList.length" description="暂无订单记录" />
+    </PullRefresh>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Empty } from "vant";
+import { PullRefresh, List, Empty } from "vant";
 
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -158,7 +181,9 @@ import dayjs from "dayjs";
 import {
   getCommissionCashInfo,
   getGiftCommissionTimeData,
+  getGiftOrderList,
   getTeamCommissionTimeData,
+  getTeamOrderList,
 } from "../utils/api";
 
 import type {
@@ -175,6 +200,9 @@ const curMenuIdx = ref(0);
 const curDateIdx = ref(0);
 const timeData = ref<CommissionTimeData>();
 
+const loading = ref(false);
+const finished = ref(false);
+const refreshing = ref(false);
 const orderList = ref<Order[]>([]);
 
 onMounted(() => {
@@ -182,6 +210,9 @@ onMounted(() => {
   setCommissionCashInfo();
   setTimeData();
 });
+
+const onRefresh = () => setOrderList(true);
+const onLoadMore = () => setOrderList();
 
 const setCommissionCashInfo = async () => {
   cashInfo.value = await getCommissionCashInfo();
@@ -207,6 +238,37 @@ const setTimeData = async () => {
   } else {
     timeData.value = await getTeamCommissionTimeData(curDateIdx.value + 1);
   }
+};
+
+const setOrderList = (init = false) => {
+  if (curMenuIdx.value === 0) {
+    setGiftOrderList(init);
+  } else {
+    setTeamOrderList(init);
+  }
+};
+let page = 0;
+const setGiftOrderList = async (init = false) => {
+  if (init) {
+    page = 0;
+    finished.value = false;
+  }
+  const list = await getGiftOrderList(curDateIdx.value + 1, ++page);
+  orderList.value = init ? list : [...orderList.value, ...list];
+  if (!list.length) finished.value = true;
+  loading.value = false;
+  refreshing.value = false;
+};
+const setTeamOrderList = async (init = false) => {
+  if (init) {
+    page = 0;
+    finished.value = false;
+  }
+  const list = await getTeamOrderList(curDateIdx.value + 1, ++page);
+  orderList.value = init ? list : [...orderList.value, ...list];
+  if (!list.length) finished.value = true;
+  loading.value = false;
+  refreshing.value = false;
 };
 const checkOrderDetail = (orderSn: string) => {
   console.log("orderSn", orderSn);

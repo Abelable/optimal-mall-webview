@@ -31,16 +31,18 @@ export interface CommissionTimeData {
   settledAmount: number;
 }
 
+interface Coods {
+  cover: string;
+  name: string;
+  selectedSkuName: string;
+  commission: number;
+}
+
 export interface Order {
   orderSn: string;
   status: number;
   createdAt: string;
   commission: number;
-  scene: number;
-  goodsList: {
-    cover: string;
-    name: string;
-    selectedSkuName: string;
-    commission: number;
-  }[];
+  goodsList?: Coods[];
+  goods?: Coods;
 }
