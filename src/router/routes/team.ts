@@ -18,6 +18,14 @@ const team: Array<RouteRecordRaw> = [
     component: () => import("@/pages/team/subpages/performance.vue"),
   },
   {
+    path: "/team/certification",
+    name: "team_certification",
+    meta: {
+      title: "升级认证",
+    },
+    component: () => import("@/pages/team/subpages/certification.vue"),
+  },
+  {
     path: "/team/promoter",
     name: "team_promoter",
     meta: {

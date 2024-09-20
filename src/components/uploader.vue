@@ -14,12 +14,12 @@
     >
       <div class="img-wrap">
         <img
-          style="width: 0.5rem; height: 0.5rem"
+          style="width: 0.4rem; height: 0.4rem"
           :src="require(`@/assets/images/camera.png`)"
           alt=""
         />
       </div>
-      <div class="desc">{{ title }}</div>
+      <div class="desc" v-if="title">{{ title }}</div>
     </div>
     <div class="loading-wrap" :style="{ width, height }" v-if="loading">
       <Loading vertical color="#fff">上传中...</Loading>
@@ -74,14 +74,14 @@ const uploadPhoto = (async ({ file }: { file: File }) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 1rem;
-    height: 1rem;
-    background: rgba(0, 0, 0, 0.6);
+    width: 0.8rem;
+    height: 0.8rem;
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 50%;
   }
   .desc {
-    margin-top: 0.3rem;
-    color: #000;
+    margin-top: 0.18rem;
+    color: #6a6f75;
     font-size: 0.2rem;
   }
 }
