@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="status === 0">
     <div class="title">成为第 1 位乡村振兴服务商</div>
     <div class="form">
       <div class="form-item">
@@ -68,12 +68,18 @@
       </div>
     </div>
   </div>
+  <div class="review-status" v-if="status === 1">
+    <img class="review-illus" src="../images/review_illus.png" alt="" />
+    <div class="illus-desc">信息已提交，审核中</div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import Uploader from "@/components/Uploader.vue";
 import { showToast } from "vant";
 import { computed, ref } from "vue";
+
+const status = ref(1);
 
 const name = ref("");
 const bankName = ref("");
@@ -193,6 +199,23 @@ const submit = () => {
         opacity: 1;
       }
     }
+  }
+}
+.review-status {
+  height: 100vh;
+  background: #fff;
+  overflow: hidden;
+  .review-illus {
+    display: block;
+    margin: 2rem auto 0;
+    width: 4rem;
+    height: 3.4rem;
+  }
+  .illus-desc {
+    margin-top: 0.8rem;
+    color: #283e5a;
+    font-size: 0.28rem;
+    text-align: center;
   }
 }
 </style>
