@@ -1,16 +1,34 @@
 <template>
   <div class="performance-data-wrap">
-    <div class="month-picker">
-      <span>2024年9月</span>
+    <div
+      class="month-picker"
+      v-if="timeOptions.length"
+      @click="timePickerPopupVisible = true"
+    >
+      <span>{{ timeOptions[curTimeIdx].text }}</span>
       <img class="picker-arrow" src="../images/down.png" alt="" />
     </div>
     <div class="month-data">
       <span style="font-size: 0.24rem">¥</span>
-      <span>76,651.00</span>
+      <span>{{
+        [
+          achievementInfo?.curMonthGMV.toFixed(2),
+          achievementInfo?.lastMonthGMV.toFixed(2),
+          achievementInfo?.beforeLastMonthGMV.toFixed(2),
+        ][curTimeIdx]
+      }}</span>
     </div>
     <div class="total-data">
       <span>近三月累计</span>
-      <span style="font-weight: bold">3333.00</span>
+      <span style="font-weight: bold">{{
+        achievementInfo
+          ? (
+              +achievementInfo?.beforeLastMonthGMV +
+              +achievementInfo?.lastMonthGMV +
+              +achievementInfo?.curMonthGMV
+            ).toFixed(2)
+          : "0.00"
+      }}</span>
       <span>元</span>
     </div>
   </div>
@@ -42,15 +60,65 @@
     </div>
   </div>
   <Empty v-if="!recordList.length" description="暂无业绩记录" />
+
+  <PickerPopup
+    v-if="timeOptions.length"
+    :visible="timePickerPopupVisible"
+    :options="timeOptions"
+    @confirm="setCurTime"
+    @cancel="timePickerPopupVisible = false"
+  />
 </template>
 
 <script setup lang="ts">
-import { Empty } from "vant";
-import { ref } from "vue";
+import PickerPopup from "@/components/PickerPopup.vue";
 
+import dayjs from "dayjs";
+import { Empty } from "vant";
+import { onMounted, ref } from "vue";
+import { getPromoterAchievement } from "../utils/api";
+
+import type { Option } from "@/utils/type";
+import type { Achievement } from "../utils/type";
+
+const achievementInfo = ref<Achievement>();
 const curMenuIdx = ref(0);
 const recordList = ref([]);
+const timePickerPopupVisible = ref(false);
+const timeOptions = ref<Option[]>([]);
+const curTimeIdx = ref(0);
 
+onMounted(() => {
+  const curYear = dayjs().year();
+  const curMount = dayjs().month();
+  timeOptions.value = [
+    {
+      text: `${curYear}年${curMount + 1}月`,
+      value: 3,
+    },
+
+    {
+      text: `${curYear}年${curMount}月`,
+      value: 4,
+    },
+    {
+      text: `${curYear}年${curMount - 1}月`,
+      value: 5,
+    },
+  ];
+  setAchievementInfo();
+});
+
+const setAchievementInfo = async () => {
+  achievementInfo.value = await getPromoterAchievement();
+};
+
+const setCurTime = ({ selectedValues }: { selectedValues: number[] }) => {
+  curTimeIdx.value = timeOptions.value.findIndex(
+    (item) => item.value === selectedValues[0]
+  );
+  timePickerPopupVisible.value = false;
+};
 const selectMenu = (index: number) => {
   curMenuIdx.value = index;
 };
