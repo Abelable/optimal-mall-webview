@@ -15,7 +15,7 @@ const agreements: Array<RouteRecordRaw> = [
     meta: {
       title: "提现规则",
     },
-    component: () => import("@/pages/agreements/userService.vue"),
+    component: () => import("@/pages/agreements/withdrawRules.vue"),
   },
 ];
 
