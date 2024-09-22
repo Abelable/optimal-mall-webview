@@ -78,3 +78,15 @@ export const getPromoterList = async ({
   });
   return list;
 };
+
+export const getCommissionOrderList = async (
+  scene: number,
+  timeType: number,
+  page: number,
+  limit = 10
+): Promise<{ orderSn: string; commissionBase: number }[]> => {
+  const { list = [] } = await http("order/commission_list", {
+    data: cleanObject({ scene, timeType, page, limit }),
+  });
+  return list;
+};

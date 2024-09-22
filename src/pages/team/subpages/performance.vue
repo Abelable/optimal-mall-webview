@@ -49,17 +49,30 @@
       />
     </div>
   </div>
-  <div class="record-list" v-if="recordList.length">
-    <div class="record-item">
-      <div class="order-info">
-        <div>订单编号</div>
-        <div class="order-sn">77667889900998777778</div>
-        <img class="check-icon" src="../images/arrow.png" alt="" />
+  <PullRefresh class="container" v-model="refreshing" @refresh="onRefresh">
+    <List
+      v-model="loading"
+      :finished="finished"
+      @load="onLoadMore"
+      :finished-text="orderList.length ? '没有更多了' : ''"
+    >
+      <div class="record-list" v-if="orderList.length">
+        <div
+          class="record-item"
+          v-for="(item, index) in orderList"
+          :key="index"
+        >
+          <div class="order-info">
+            <div>订单编号</div>
+            <div class="order-sn">{{ item.orderSn }}</div>
+            <img class="check-icon" src="../images/arrow.png" alt="" />
+          </div>
+          <div class="record-amount">+{{ item.commissionBase }}</div>
+        </div>
       </div>
-      <div class="record-amount">+14.50</div>
-    </div>
-  </div>
-  <Empty v-if="!recordList.length" description="暂无业绩记录" />
+    </List>
+    <Empty v-if="!orderList.length" description="暂无业绩记录" />
+  </PullRefresh>
 
   <PickerPopup
     v-if="timeOptions.length"
@@ -71,22 +84,26 @@
 </template>
 
 <script setup lang="ts">
+import { Empty, PullRefresh, List } from "vant";
 import PickerPopup from "@/components/PickerPopup.vue";
 
 import dayjs from "dayjs";
-import { Empty } from "vant";
 import { onMounted, ref } from "vue";
-import { getPromoterAchievement } from "../utils/api";
+import { getCommissionOrderList, getPromoterAchievement } from "../utils/api";
 
 import type { Option } from "@/utils/type";
 import type { Achievement } from "../utils/type";
 
 const achievementInfo = ref<Achievement>();
 const curMenuIdx = ref(0);
-const recordList = ref([]);
+const orderList = ref<{ orderSn: string; commissionBase: number }[]>([]);
 const timePickerPopupVisible = ref(false);
 const timeOptions = ref<Option[]>([]);
 const curTimeIdx = ref(0);
+
+const loading = ref(false);
+const finished = ref(false);
+const refreshing = ref(false);
 
 onMounted(() => {
   const curYear = dayjs().year();
@@ -108,6 +125,8 @@ onMounted(() => {
   ];
   setAchievementInfo();
 });
+const onRefresh = () => setOrderList(true);
+const onLoadMore = () => setOrderList();
 
 const setAchievementInfo = async () => {
   achievementInfo.value = await getPromoterAchievement();
@@ -118,9 +137,28 @@ const setCurTime = ({ selectedValues }: { selectedValues: number[] }) => {
     (item) => item.value === selectedValues[0]
   );
   timePickerPopupVisible.value = false;
+  setOrderList(true);
 };
 const selectMenu = (index: number) => {
   curMenuIdx.value = index;
+  setOrderList(true);
+};
+
+let page = 0;
+const setOrderList = async (init = true) => {
+  if (init) {
+    page = 0;
+    finished.value = false;
+  }
+  const list = await getCommissionOrderList(
+    curMenuIdx.value + 1,
+    +timeOptions.value[curTimeIdx.value].value,
+    ++page
+  );
+  orderList.value = init ? list : [...orderList.value, ...list];
+  if (!list.length) {
+    finished.value = true;
+  }
 };
 </script>
 
