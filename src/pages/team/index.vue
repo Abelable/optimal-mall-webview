@@ -34,8 +34,8 @@
           ></div>
         </div>
         <div class="progress-bar-tips">{{ achievementInfo?.percent }}%</div>
-        <div class="upgrade-btn">
-          {{ achievementInfo?.percent === 100 ? "去升级" : "取查看" }}
+        <div class="upgrade-btn" @click="upgrade">
+          {{ achievementInfo?.percent === 100 ? "去升级" : "去查看" }}
         </div>
       </div>
     </div>
@@ -148,6 +148,9 @@ const withdraw = () =>
   router.push(`/team/account?level=${userInfo.value?.level}`);
 
 const checkMyPromoters = () => router.push("/team/promoter");
+const upgrade = () => {
+  router.push("/team/performance");
+};
 </script>
 
 <style lang="scss" scoped>
