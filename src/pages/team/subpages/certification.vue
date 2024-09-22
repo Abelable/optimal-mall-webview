@@ -1,6 +1,6 @@
 <template>
   <div class="container" v-if="status === 0">
-    <div class="title">成为第 1 位乡村振兴服务商</div>
+    <div class="title">成为乡村振兴服务商</div>
     <div class="form">
       <div class="form-item">
         <div class="form-input-wrap">
