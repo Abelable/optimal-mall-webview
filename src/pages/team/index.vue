@@ -14,9 +14,15 @@
         </div>
       </div>
     </div> -->
-    <div class="upgradation-wrap">
+    <div
+      class="upgradation-wrap"
+      v-if="userInfo"
+      :style="{
+        'background-image': `url(${require(`./images/upgradation_bg_c${userInfo?.level}.png`)})`,
+      }"
+    >
       <div class="progress-desc">
-        <span>距离C1，仅差</span>
+        <span>距离C{{ userInfo?.level }}，仅差</span>
         <span style="color: #f5701d"> 20%</span>
       </div>
       <div class="progress-bar-wrap">
@@ -175,7 +181,6 @@ const checkMyPromoters = () => router.push("/team/promoter");
   .upgradation-wrap {
     padding: 0 0.24rem;
     height: 2rem;
-    background-image: url("./images/upgradation-bg.png");
     background-size: calc(100% + 0.32rem) calc(100% + 0.24rem);
     background-position: -0.16rem -0.12rem;
     background-repeat: no-repeat;
