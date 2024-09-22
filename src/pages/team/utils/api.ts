@@ -8,6 +8,7 @@ import type {
   CommissionTimeData,
   Order,
   Promoter,
+  Achievement,
 } from "./type";
 
 export const getUserInfo = async (): Promise<UserInfo> =>
@@ -50,6 +51,9 @@ export const getTeamOrderList = async (
   });
   return list;
 };
+
+export const getPromoterAchievement = async (): Promise<Achievement> =>
+  await http("commission/achievement");
 
 export const getPromoterData = async (): Promise<PromoterData> =>
   await http("user/promoter_data");

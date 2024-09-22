@@ -28,10 +28,15 @@
       <div class="progress-bar-wrap">
         <div class="progress-bar-tips">涨分进度</div>
         <div class="progress-bar">
-          <div class="progress-bar-inner" style="width: 80%"></div>
+          <div
+            class="progress-bar-inner"
+            :style="{ width: `${achievementInfo?.percent}%` }"
+          ></div>
         </div>
-        <div class="progress-bar-tips">80%</div>
-        <div class="upgrade-btn">去升级</div>
+        <div class="progress-bar-tips">{{ achievementInfo?.percent }}%</div>
+        <div class="upgrade-btn">
+          {{ achievementInfo?.percent === 100 ? "去升级" : "取查看" }}
+        </div>
       </div>
     </div>
     <div class="account-amount">
@@ -92,20 +97,28 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import {
   getCommissionSumInfo,
+  getPromoterAchievement,
   getPromoterData,
   getUserInfo,
 } from "./utils/api";
 
-import type { CommissionSumInfo, PromoterData, UserInfo } from "./utils/type";
+import type {
+  CommissionSumInfo,
+  PromoterData,
+  UserInfo,
+  Achievement,
+} from "./utils/type";
 
 const router = useRouter();
 
 const userInfo = ref<UserInfo>();
+const achievementInfo = ref<Achievement>();
 const commissionSumInfo = ref<CommissionSumInfo>();
 const promoterData = ref<PromoterData>();
 
 onMounted(() => {
   setUserInfo();
+  setAchievementInfo();
   setCommissionSumInfo();
   setPromoterData();
 });
@@ -120,6 +133,9 @@ onMounted(() => {
 
 const setUserInfo = async () => {
   userInfo.value = await getUserInfo();
+};
+const setAchievementInfo = async () => {
+  achievementInfo.value = await getPromoterAchievement();
 };
 const setCommissionSumInfo = async () => {
   commissionSumInfo.value = await getCommissionSumInfo();

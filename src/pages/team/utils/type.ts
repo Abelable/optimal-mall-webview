@@ -56,3 +56,10 @@ export interface Promoter {
   GMV: number;
   createdAt: string;
 }
+
+export interface Achievement {
+  beforeLastMonthGMV: number;
+  lastMonthGMV: number;
+  curMonthGMV: number;
+  percent: number;
+}
