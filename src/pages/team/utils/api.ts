@@ -1,4 +1,5 @@
 import { http } from "@/utils/http";
+import { cleanObject } from "@/utils";
 import type {
   UserInfo,
   CommissionSumInfo,
@@ -6,6 +7,7 @@ import type {
   CommissionCashInfo,
   CommissionTimeData,
   Order,
+  Promoter,
 } from "./type";
 
 export const getUserInfo = async (): Promise<UserInfo> =>
@@ -51,3 +53,24 @@ export const getTeamOrderList = async (
 
 export const getPromoterData = async (): Promise<PromoterData> =>
   await http("user/promoter_data");
+
+export const getTodayNewPromoterList = async (): Promise<Promoter[]> =>
+  await http("user/today_new_promoter_list");
+
+export const getTodayOrderingPromoterList = async (): Promise<Promoter[]> =>
+  await http("user/today_ordering_promoter_list");
+
+export const getPromoterList = async ({
+  keywords,
+  page,
+  limit,
+}: {
+  keywords: string;
+  page: number;
+  limit: number;
+}): Promise<Promoter[]> => {
+  const { list = [] } = await http("user/promoter_list", {
+    data: cleanObject({ keywords, page, limit }),
+  });
+  return list;
+};

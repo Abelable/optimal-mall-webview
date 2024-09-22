@@ -18,58 +18,112 @@
     </div>
   </div>
   <div class="container">
-    <div class="title">今日新增</div>
-    <div class="promoter-list" v-if="newList.length">
-      <PromoterItem
-        v-for="(item, index) in newList"
-        :key="index"
-        :item="item"
-      />
-    </div>
-    <Empty v-if="!newList.length" description="暂无新增推广员" />
+    <div v-if="!searching">
+      <div class="title">今日新增</div>
+      <div class="promoter-list" v-if="newList.length">
+        <PromoterItem
+          v-for="(item, index) in newList"
+          :key="index"
+          :item="item"
+        />
+      </div>
+      <Empty v-if="!newList.length" description="暂无新增推广员" />
 
-    <div class="title">今日下单</div>
-    <div class="promoter-list" v-if="orderingList.length">
-      <PromoterItem
-        v-for="(item, index) in orderingList"
-        :key="index"
-        :item="item"
-      />
-    </div>
-    <Empty v-if="!orderingList.length" description="暂无下单推广员" />
+      <div class="title">今日下单</div>
+      <div class="promoter-list" v-if="orderingList.length">
+        <PromoterItem
+          v-for="(item, index) in orderingList"
+          :key="index"
+          :item="item"
+        />
+      </div>
+      <Empty v-if="!orderingList.length" description="暂无下单推广员" />
 
-    <div class="title">累计所有</div>
-    <div class="promoter-list" v-if="allList.length">
-      <PromoterItem
-        v-for="(item, index) in allList"
-        :key="index"
-        :item="item"
-      />
+      <div class="title">累计所有</div>
     </div>
-    <Empty v-if="!allList.length" description="暂无推广员" />
+    <PullRefresh class="container" v-model="refreshing" @refresh="onRefresh">
+      <List
+        class="sales-record-list"
+        v-model="loading"
+        :finished="finished"
+        @load="onLoadMore"
+        :finished-text="allList.length ? '没有更多了' : ''"
+      >
+        <PromoterItem
+          v-for="(item, index) in allList"
+          :key="index"
+          :item="item"
+        />
+      </List>
+      <Empty v-if="!allList.length" description="暂无推广员" />
+    </PullRefresh>
   </div>
 </template>
 
 <script setup lang="ts">
-import { showToast, Empty } from "vant";
+import { showToast, Empty, PullRefresh, List } from "vant";
 import PromoterItem from "../components/promoter-item.vue";
 
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import {
+  getPromoterList,
+  getTodayNewPromoterList,
+  getTodayOrderingPromoterList,
+} from "../utils/api";
+
+import type { Promoter } from "../utils/type";
 
 const keywords = ref("");
 const searching = ref(false);
-const newList = ref([]);
-const orderingList = ref([]);
-const allList = ref([]);
+const newList = ref<Promoter[]>([]);
+const orderingList = ref<Promoter[]>([]);
+const loading = ref(false);
+const finished = ref(false);
+const refreshing = ref(false);
+const allList = ref<Promoter[]>([]);
+
+onMounted(() => {
+  setNewList();
+  setOrderingList();
+});
+const onRefresh = () => setAllList(true);
+const onLoadMore = () => setAllList();
 
 const clearSearch = () => {
   keywords.value = "";
   searching.value = false;
+  setAllList(true);
 };
 const search = () => {
   if (!keywords.value) {
     showToast("请输入昵称或手机号");
     return;
+  }
+  searching.value = true;
+  setAllList(true);
+};
+
+const setNewList = async () => {
+  newList.value = await getTodayNewPromoterList();
+};
+const setOrderingList = async () => {
+  orderingList.value = await getTodayOrderingPromoterList();
+};
+
+let page = 0;
+const setAllList = async (init = false) => {
+  if (init) {
+    page = 0;
+    finished.value = false;
+  }
+  const list = await getPromoterList({
+    keywords: keywords.value,
+    page: ++page,
+    limit: 10,
+  });
+  allList.value = init ? list : [...allList.value, ...list];
+  if (!list.length) {
+    finished.value = true;
   }
 };
 </script>

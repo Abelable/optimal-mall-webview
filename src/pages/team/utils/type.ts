@@ -13,12 +13,6 @@ export interface CommissionSumInfo {
   settledAmount: number;
 }
 
-export interface PromoterData {
-  todayNewCount: number;
-  todayOrderingCount: number;
-  totalCount: number;
-}
-
 export interface CommissionCashInfo {
   share: number;
   team: number;
@@ -45,4 +39,20 @@ export interface Order {
   commission: number;
   goodsList?: Coods[];
   goods?: Coods;
+}
+
+export interface PromoterData {
+  todayNewCount: number;
+  todayOrderingCount: number;
+  totalCount: number;
+}
+
+export interface Promoter {
+  id: number;
+  avatar: string;
+  nickname: string;
+  mobile: string;
+  level: number;
+  GMV: number;
+  createdAt: string;
 }

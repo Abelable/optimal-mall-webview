@@ -1,25 +1,53 @@
 <template>
   <div class="promoter-item">
     <div class="info-wrap">
-      <img class="avatar" src="" alt="" />
+      <img class="avatar" :src="item.avatar" alt="" />
       <div class="info">
-        <div class="name">昵称</div>
+        <div class="name">{{ item.nickname }}</div>
         <div class="mobile">
-          <span>177****7777</span>
-          <img class="visible-icon" src="../images/show.png" alt="" />
+          <span>{{
+            mobileVisible
+              ? item.mobile
+              : `${item.mobile.slice(0, 3)}****${item.mobile.slice(-4)}`
+          }}</span>
+          <img
+            class="visible-icon"
+            :src="require(`../images/${mobileVisible ? 'show' : 'hide'}.png`)"
+            alt=""
+          />
         </div>
-        <div class="num-desc">诚信星球第x号乡村振兴推广员</div>
+        <div class="num-desc">诚信星球第{{ item.id }}号乡村振兴推广员</div>
       </div>
     </div>
     <div class="data-wrap">
-      <div class="gmv">GMV: ¥200.000,000,00</div>
-      <div class="time">提交时间: 2024.3.3</div>
+      <div class="gmv">GMV: ¥{{ item.GMV }}</div>
+      <div class="time">
+        提交时间: {{ dayjs(item.createdAt).format("YYYY.MM.DD") }}
+      </div>
     </div>
-    <div class="identity-tag">推广员</div>
+    <div
+      class="identity-tag"
+      :class="{
+        promoter: item.level === 1,
+        c1: item.level === 2,
+        c2: item.level === 3,
+        c3: item.level === 4,
+      }"
+    >
+      {{ ["推广员", "c1", "c2", "c3"][item.level - 1] }}
+    </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from "vue";
+import type { Promoter } from "../utils/type";
+import dayjs from "dayjs";
+
+defineProps<{ item: Promoter }>();
+
+const mobileVisible = ref(false);
+</script>
 
 <style lang="scss" scoped>
 .promoter-item {
@@ -83,10 +111,24 @@
     justify-content: center;
     width: 0.92rem;
     height: 0.44rem;
-    color: #f5701d;
     font-size: 0.2rem;
-    background: #fff7e6;
     border-radius: 0 0.16rem 0 0.16rem;
+    &.promoter {
+      color: #f5701d;
+      background: #fff7e6;
+    }
+    &.c1 {
+      color: #0dc1e2;
+      background: #ebfcff;
+    }
+    &.c2 {
+      color: #00aa5a;
+      background: #dff7ec;
+    }
+    &.c3 {
+      color: #ff4747;
+      background: #ffebeb;
+    }
   }
 }
 </style>

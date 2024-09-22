@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-    <div class="promoter-data-wrap">
+    <div class="promoter-data-wrap" @click="checkMyPromoters">
       <div class="promoter-title-wrap">
         <div class="promoter-title">我的推广员</div>
         <img class="more-icon" src="./images/arrow.png" alt="" />
@@ -124,6 +124,8 @@ const setPromoterData = async () => {
 
 const withdraw = () =>
   router.push(`/team/account?level=${userInfo.value?.level}`);
+
+const checkMyPromoters = () => router.push("/team/promoter");
 </script>
 
 <style lang="scss" scoped>
