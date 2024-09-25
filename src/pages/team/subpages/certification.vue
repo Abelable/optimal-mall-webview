@@ -23,7 +23,7 @@
           <div class="form-label">银行卡号：</div>
           <input
             class="form-input"
-            v-model="bankCode"
+            v-model="bankCardCode"
             placeholder="请输入银行卡号"
           />
         </div>
@@ -83,7 +83,7 @@ const status = ref(1);
 
 const name = ref("");
 const bankName = ref("");
-const bankCode = ref("");
+const bankCardCode = ref("");
 const bankAddress = ref("");
 const businessLicense = ref("");
 const idCardFront = ref("");
@@ -93,7 +93,7 @@ const btnActive = computed(
   () =>
     name.value &&
     bankName.value &&
-    bankCode.value &&
+    bankCardCode.value &&
     bankAddress.value &&
     businessLicense.value &&
     idCardFront.value &&
@@ -119,7 +119,7 @@ const submit = () => {
     showToast("请输入银行名称");
     return;
   }
-  if (!bankCode.value) {
+  if (!bankCardCode.value) {
     showToast("请输入银行卡号");
     return;
   }
