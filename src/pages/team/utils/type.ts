@@ -5,6 +5,7 @@ export interface UserInfo {
   level: number;
   mobile: string;
   promoterId: number;
+  enterpriseInfoId: number;
 }
 
 export interface CommissionSumInfo {

@@ -35,7 +35,11 @@
         </div>
         <div class="progress-bar-tips">{{ achievementInfo?.percent }}%</div>
         <div class="upgrade-btn" @click="upgrade">
-          {{ achievementInfo?.percent === 100 ? "去升级" : "去查看" }}
+          {{
+            achievementInfo?.percent === 100 && !userInfo.enterpriseInfoId
+              ? "去升级"
+              : "去查看"
+          }}
         </div>
       </div>
     </div>
