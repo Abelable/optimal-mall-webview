@@ -23,7 +23,9 @@
     >
       <div class="progress-desc">
         <span>距离C{{ userInfo?.level }}，仅差</span>
-        <span style="color: #f5701d"> 20%</span>
+        <span style="color: #f5701d">
+          {{ 100 - (achievementInfo?.percent || 0) }}%</span
+        >
       </div>
       <div class="progress-bar-wrap">
         <div class="progress-bar-tips">涨分进度</div>
