@@ -1,19 +1,64 @@
 <template>
-  <div class="container" v-if="status === 0">
+  <div
+    class="status"
+    :class="{
+      ing: enterpriseInfo?.status === 0,
+      done: enterpriseInfo?.status === 1,
+      fail: enterpriseInfo?.status === 2,
+    }"
+    v-if="enterpriseInfo?.status !== undefined"
+  >
+    {{
+      enterpriseInfo?.status === 0
+        ? "企业认证审核中"
+        : enterpriseInfo?.status === 1
+        ? "企业认证审核成功过"
+        : "企业认证失败"
+    }}
+  </div>
+  <div class="fail-reason" v-if="enterpriseInfo?.status === 2">
+    <div>失败原因：</div>
+    <div>{{ enterpriseInfo?.failureReason }}</div>
+  </div>
+  <div class="container">
     <div class="title">成为乡村振兴服务商</div>
     <div class="form">
       <div class="form-item">
         <div class="form-input-wrap">
           <div class="form-label">姓名：</div>
-          <input class="form-input" v-model="name" placeholder="请输入姓名" />
+          <div
+            class="form-input"
+            v-if="enterpriseInfo?.status === 0 || enterpriseInfo?.status === 1"
+          >
+            {{ enterpriseInfo?.name }}
+          </div>
+          <input
+            class="form-input"
+            v-if="
+              enterpriseInfo?.status === undefined ||
+              enterpriseInfo?.status === 2
+            "
+            v-model="enterpriseInfo.name"
+            placeholder="请输入姓名"
+          />
         </div>
       </div>
       <div class="form-item">
         <div class="form-input-wrap">
           <div class="form-label">银行名称：</div>
+          <div
+            class="form-input"
+            v-if="enterpriseInfo?.status === 0 || enterpriseInfo?.status === 1"
+          >
+            {{ enterpriseInfo?.bankName }}
+          </div>
           <input
             class="form-input"
-            v-model="bankName"
+            v-if="
+              enterpriseInfo?.status === undefined ||
+              enterpriseInfo?.status === 2
+            "
+            v-model="enterpriseInfo.bankName"
             placeholder="请输入银行名称"
           />
         </div>
@@ -21,9 +66,19 @@
       <div class="form-item">
         <div class="form-input-wrap">
           <div class="form-label">银行卡号：</div>
+          <div
+            class="form-input"
+            v-if="enterpriseInfo?.status === 0 || enterpriseInfo?.status === 1"
+          >
+            {{ enterpriseInfo?.bankCardCode }}
+          </div>
           <input
             class="form-input"
-            v-model="bankCardCode"
+            v-if="
+              enterpriseInfo?.status === undefined ||
+              enterpriseInfo?.status === 2
+            "
+            v-model="enterpriseInfo.bankCardCode"
             placeholder="请输入银行卡号"
           />
         </div>
@@ -31,9 +86,19 @@
       <div class="form-item">
         <div class="form-input-wrap">
           <div class="form-label">银行地址：</div>
+          <div
+            class="form-input"
+            v-if="enterpriseInfo?.status === 0 || enterpriseInfo?.status === 1"
+          >
+            {{ enterpriseInfo?.bankAddress }}
+          </div>
           <input
             class="form-input"
-            v-model="bankAddress"
+            v-if="
+              enterpriseInfo?.status === undefined ||
+              enterpriseInfo?.status === 2
+            "
+            v-model="enterpriseInfo.bankAddress"
             placeholder="请输入银行地址"
           />
         </div>
@@ -42,20 +107,49 @@
         <div class="form-label" style="margin-bottom: 0.2rem">
           请上传营业执照
         </div>
+        <img
+          class="photo"
+          v-if="enterpriseInfo?.status === 0 || enterpriseInfo?.status === 1"
+          :src="enterpriseInfo?.businessLicensePhoto"
+          alt=""
+        />
         <Uploader
+          v-if="
+            enterpriseInfo?.status === undefined || enterpriseInfo?.status === 2
+          "
           width="2.4rem"
           height="1.6rem"
           @finish="uploadBusinessLicense"
         />
         <div class="form-label" style="margin: 0.2rem 0">请上传法人信息</div>
         <div class="uploader-wrap">
+          <img
+            class="photo"
+            v-if="enterpriseInfo?.status === 0 || enterpriseInfo?.status === 1"
+            :src="enterpriseInfo?.idCardFrontPhoto"
+            alt=""
+          />
           <Uploader
+            v-if="
+              enterpriseInfo?.status === undefined ||
+              enterpriseInfo?.status === 2
+            "
             width="2.4rem"
             height="1.6rem"
             title="法人身份证正面"
             @finish="uploadIdCardFront"
           />
+          <img
+            class="photo"
+            v-if="enterpriseInfo?.status === 0 || enterpriseInfo?.status === 1"
+            :src="enterpriseInfo?.idCardBackPhoto"
+            alt=""
+          />
           <Uploader
+            v-if="
+              enterpriseInfo?.status === undefined ||
+              enterpriseInfo?.status === 2
+            "
             width="2.4rem"
             height="1.6rem"
             title="法人身份证反面"
@@ -63,86 +157,191 @@
           />
         </div>
       </div>
-      <div class="submit-btn" :class="{ active: btnActive }" @click="submit">
+      <div
+        class="submit-btn"
+        v-if="
+          enterpriseInfo?.status === undefined || enterpriseInfo?.status === 2
+        "
+        :class="{ active: btnActive }"
+        @click="submit"
+      >
         提交
       </div>
     </div>
-  </div>
-  <div class="review-status" v-if="status === 1">
-    <img class="review-illus" src="../images/review_illus.png" alt="" />
-    <div class="illus-desc">信息已提交，审核中</div>
   </div>
 </template>
 
 <script setup lang="ts">
 import Uploader from "@/components/Uploader.vue";
-import { showToast } from "vant";
-import { computed, ref } from "vue";
+import { closeToast, showLoadingToast, showToast } from "vant";
+import { computed, onMounted, reactive } from "vue";
 
-const status = ref(1);
+import type { EnterpriseInfo } from "../utils/type";
+import {
+  addEnterpriseInfo,
+  editEnterpriseInfo,
+  getEnterpriseInfo,
+} from "../utils/api";
 
-const name = ref("");
-const bankName = ref("");
-const bankCardCode = ref("");
-const bankAddress = ref("");
-const businessLicense = ref("");
-const idCardFront = ref("");
-const idCardBack = ref("");
+const enterpriseInfo = reactive<EnterpriseInfo>({
+  id: undefined,
+  status: undefined,
+  failureReason: "",
+  name: "",
+  bankName: "",
+  bankCardCode: "",
+  bankAddress: "",
+  businessLicensePhoto: "",
+  idCardFrontPhoto: "",
+  idCardBackPhoto: "",
+});
 
-const btnActive = computed(
-  () =>
-    name.value &&
-    bankName.value &&
-    bankCardCode.value &&
-    bankAddress.value &&
-    businessLicense.value &&
-    idCardFront.value &&
-    idCardBack.value
-);
+const btnActive = computed(() => {
+  const {
+    name,
+    bankName,
+    bankCardCode,
+    bankAddress,
+    businessLicensePhoto,
+    idCardFrontPhoto,
+    idCardBackPhoto,
+  } = enterpriseInfo;
+  return (
+    name &&
+    bankName &&
+    bankCardCode &&
+    bankAddress &&
+    businessLicensePhoto &&
+    idCardFrontPhoto &&
+    idCardBackPhoto
+  );
+});
+
+onMounted(() => {
+  setEnterpriseInfo();
+});
+
+const setEnterpriseInfo = async () => {
+  const {
+    id,
+    status,
+    failureReason,
+    name,
+    bankName,
+    bankCardCode,
+    bankAddress,
+    businessLicensePhoto,
+    idCardFrontPhoto,
+    idCardBackPhoto,
+  } = (await getEnterpriseInfo()) || {};
+  if (id) {
+    enterpriseInfo.id = id;
+    enterpriseInfo.status = status;
+    enterpriseInfo.failureReason = failureReason;
+    enterpriseInfo.name = name;
+    enterpriseInfo.bankName = bankName;
+    enterpriseInfo.bankCardCode = bankCardCode;
+    enterpriseInfo.bankAddress = bankAddress;
+    enterpriseInfo.businessLicensePhoto = businessLicensePhoto;
+    enterpriseInfo.idCardFrontPhoto = idCardFrontPhoto;
+    enterpriseInfo.idCardBackPhoto = idCardBackPhoto;
+  }
+};
 
 const uploadBusinessLicense = (photo: string) => {
-  businessLicense.value = photo;
+  enterpriseInfo.businessLicensePhoto = photo;
 };
 const uploadIdCardFront = (photo: string) => {
-  idCardFront.value = photo;
+  enterpriseInfo.idCardFrontPhoto = photo;
 };
 const uploadIdCardBack = (photo: string) => {
-  idCardBack.value = photo;
+  enterpriseInfo.idCardBackPhoto = photo;
 };
 
-const submit = () => {
-  if (!name.value) {
+const submit = async () => {
+  const {
+    name,
+    bankName,
+    bankCardCode,
+    bankAddress,
+    businessLicensePhoto,
+    idCardFrontPhoto,
+    idCardBackPhoto,
+  } = enterpriseInfo;
+  if (!name) {
     showToast("请输入姓名");
     return;
   }
-  if (!bankName.value) {
+  if (!bankName) {
     showToast("请输入银行名称");
     return;
   }
-  if (!bankCardCode.value) {
+  if (!bankCardCode) {
     showToast("请输入银行卡号");
     return;
   }
-  if (!bankAddress.value) {
+  if (!bankAddress) {
     showToast("请输入银行地址");
     return;
   }
-  if (!businessLicense.value) {
+  if (!businessLicensePhoto) {
     showToast("请上传营业执照");
     return;
   }
-  if (!idCardFront.value) {
+  if (!idCardFrontPhoto) {
     showToast("请上传正面身份证照片");
     return;
   }
-  if (!idCardBack.value) {
+  if (!idCardBackPhoto) {
     showToast("请上传反面身份证照片");
     return;
+  }
+
+  showLoadingToast({
+    message: "信息上传中...",
+    duration: 0,
+    forbidClick: true,
+  });
+  try {
+    if (enterpriseInfo.status === 2) {
+      await editEnterpriseInfo(enterpriseInfo);
+    } else {
+      await addEnterpriseInfo(enterpriseInfo);
+    }
+    await setEnterpriseInfo();
+    closeToast();
+  } catch (error) {
+    closeToast();
+    if ((error as { message: string })?.message) {
+      showToast((error as { message: string }).message);
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 0.88rem;
+  color: #fff;
+  font-size: 0.3rem;
+  &.ing {
+    background: #ff7548;
+  }
+  &.done {
+    background: #6ed29b;
+  }
+  &.fail {
+    background: #fb6155;
+  }
+}
+.fail-reason {
+  padding: 0.24rem;
+  color: #fb6155;
+  font-size: 0.3rem;
+}
 .container {
   padding-bottom: 0.6rem;
   min-height: 100vh;
@@ -180,6 +379,11 @@ const submit = () => {
           font-size: 0.24rem;
         }
       }
+      .photo {
+        width: 2.4rem;
+        height: 1.6rem;
+        border-radius: 0.24rem;
+      }
       .uploader-wrap {
         display: flex;
         justify-content: space-between;
@@ -199,23 +403,6 @@ const submit = () => {
         opacity: 1;
       }
     }
-  }
-}
-.review-status {
-  height: 100vh;
-  background: #fff;
-  overflow: hidden;
-  .review-illus {
-    display: block;
-    margin: 2rem auto 0;
-    width: 4rem;
-    height: 3.4rem;
-  }
-  .illus-desc {
-    margin-top: 0.8rem;
-    color: #283e5a;
-    font-size: 0.28rem;
-    text-align: center;
   }
 }
 </style>

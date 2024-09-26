@@ -168,6 +168,7 @@ import type { AuthInfo } from "./utils/type";
 const authInfo = reactive<AuthInfo>({
   id: undefined,
   status: undefined,
+  failureReason: "",
   name: "",
   idCardNumber: "",
   mobile: "",
@@ -210,7 +211,6 @@ const setAuthInfo = async () => {
     authInfo.idCardFrontPhoto = idCardFrontPhoto;
     authInfo.idCardBackPhoto = idCardBackPhoto;
     authInfo.holdIdCardPhoto = holdIdCardPhoto;
-    console.log("authInfo", authInfo);
   }
 };
 

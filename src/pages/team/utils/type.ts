@@ -63,3 +63,16 @@ export interface Achievement {
   curMonthGMV: number;
   percent: number;
 }
+
+export interface EnterpriseInfo {
+  id?: number;
+  status?: number;
+  failureReason?: string;
+  name: string;
+  bankName: string;
+  bankCardCode: string;
+  bankAddress: string;
+  businessLicensePhoto: string;
+  idCardFrontPhoto: string;
+  idCardBackPhoto: string;
+}

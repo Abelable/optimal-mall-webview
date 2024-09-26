@@ -9,6 +9,7 @@ import type {
   Order,
   Promoter,
   Achievement,
+  EnterpriseInfo,
 } from "./type";
 
 export const getUserInfo = async (): Promise<UserInfo> =>
@@ -90,3 +91,22 @@ export const getCommissionOrderList = async (
   });
   return list;
 };
+
+export const getEnterpriseInfo = async (): Promise<EnterpriseInfo> =>
+  await http("enterprise_info/detail");
+
+export const addEnterpriseInfo = async (
+  enterpriseInfo: Partial<EnterpriseInfo>
+) =>
+  await http("enterprise_info/add", {
+    method: "POST",
+    data: enterpriseInfo,
+  });
+
+export const editEnterpriseInfo = async (
+  enterpriseInfo: Partial<EnterpriseInfo>
+) =>
+  await http("enterprise_info/edit", {
+    method: "POST",
+    data: enterpriseInfo,
+  });
