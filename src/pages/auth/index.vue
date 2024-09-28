@@ -195,6 +195,7 @@ const setAuthInfo = async () => {
   const {
     id,
     status,
+    failureReason,
     name,
     idCardNumber,
     mobile,
@@ -205,6 +206,7 @@ const setAuthInfo = async () => {
   if (id) {
     authInfo.id = id;
     authInfo.status = status;
+    authInfo.failureReason = failureReason;
     authInfo.name = name;
     authInfo.mobile = mobile;
     authInfo.idCardNumber = idCardNumber;
