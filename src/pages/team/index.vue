@@ -114,6 +114,7 @@ import type {
   UserInfo,
   Achievement,
 } from "./utils/type";
+import { closeToast, showLoadingToast } from "vant";
 
 const router = useRouter();
 
@@ -122,11 +123,17 @@ const achievementInfo = ref<Achievement>();
 const commissionSumInfo = ref<CommissionSumInfo>();
 const promoterData = ref<PromoterData>();
 
-onMounted(() => {
-  setUserInfo();
-  setAchievementInfo();
-  setCommissionSumInfo();
-  setPromoterData();
+onMounted(async () => {
+  showLoadingToast({
+    message: "加载中...",
+    duration: 0,
+    forbidClick: true,
+  });
+  await setUserInfo();
+  await setAchievementInfo();
+  await setCommissionSumInfo();
+  await setPromoterData();
+  closeToast();
 });
 
 // const mobile = computed(
