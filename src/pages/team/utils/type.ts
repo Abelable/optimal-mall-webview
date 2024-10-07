@@ -34,6 +34,7 @@ interface Coods {
 }
 
 export interface Order {
+  id: number;
   orderSn: string;
   status: number;
   createdAt: string;

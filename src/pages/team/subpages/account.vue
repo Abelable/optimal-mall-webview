@@ -104,7 +104,7 @@
       </div>
     </div>
 
-    <PullRefresh class="container" v-model="refreshing" @refresh="onRefresh">
+    <PullRefresh v-model="refreshing" @refresh="onRefresh">
       <List
         class="sales-record-list"
         v-model="loading"
@@ -119,7 +119,7 @@
         >
           <div class="order-info">
             <div class="order-sn-wrap">
-              <div class="order-sn" @click="checkOrderDetail(item.orderSn)">
+              <div class="order-sn" @click="checkOrderDetail(item.id)">
                 <div>订单编号：{{ item.orderSn }}</div>
                 <img class="order-sn-arrow" src="../images/arrow.png" />
               </div>
@@ -140,6 +140,16 @@
             </div>
           </div>
           <div class="goods-list" v-if="curMenuIdx === 0">
+            <div class="goods-info-wrap">
+              <img class="goods-cover" :src="item.goods?.cover" />
+              <div class="goods-info">
+                <div class="goods-name omit">{{ item.goods?.name }}</div>
+                <div class="goods-spec">{{ item.goods?.selectedSkuName }}</div>
+                <div class="goods-commission">返现¥{{ item?.commission }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="goods-list" v-if="curMenuIdx === 1">
             <div
               class="goods-info-wrap"
               v-for="(goods, goodsIdx) in item.goodsList"
@@ -150,18 +160,6 @@
                 <div class="goods-name omit">{{ goods.name }}</div>
                 <div class="goods-spec">{{ goods.selectedSkuName }}</div>
                 <div class="goods-commission">返现¥{{ goods.commission }}</div>
-              </div>
-            </div>
-          </div>
-          <div class="goods-list" v-if="curMenuIdx === 1">
-            <div class="goods-info-wrap">
-              <img class="goods-cover" :src="item.goods?.cover" />
-              <div class="goods-info">
-                <div class="goods-name omit">{{ item.goods?.name }}</div>
-                <div class="goods-spec">{{ item.goods?.selectedSkuName }}</div>
-                <div class="goods-commission">
-                  返现¥{{ item.goods?.commission }}
-                </div>
               </div>
             </div>
           </div>
@@ -285,8 +283,10 @@ const setTeamOrderList = async (init = false) => {
   loading.value = false;
   refreshing.value = false;
 };
-const checkOrderDetail = (orderSn: string) => {
-  console.log("orderSn", orderSn);
+const checkOrderDetail = (id: number) => {
+  window.wx.miniProgram.navigateTo({
+    url: `/pages/mine/subpages/order-center/subpages/order-detail/index?id=${id}`,
+  });
 };
 </script>
 
@@ -297,6 +297,13 @@ const checkOrderDetail = (orderSn: string) => {
   &.between {
     justify-content: space-between;
   }
+}
+.omit {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .container {
   padding: 0.24rem;
