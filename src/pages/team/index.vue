@@ -284,7 +284,7 @@ const upgrade = () => {
         .amount {
           color: #14191f;
           font-size: 0.44rem;
-          font-weight: 550;
+          font-weight: bold;
         }
         .amount-desc {
           margin-top: 0.16rem;

@@ -85,7 +85,7 @@ export const getCommissionOrderList = async (
   timeType: number,
   page: number,
   limit = 10
-): Promise<{ orderSn: string; commissionBase: number }[]> => {
+): Promise<{ id: number; orderSn: string; commissionBase: number }[]> => {
   const { list = [] } = await http("order/commission_list", {
     data: cleanObject({ scene, timeType, page, limit }),
   });

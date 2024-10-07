@@ -62,7 +62,7 @@
           v-for="(item, index) in orderList"
           :key="index"
         >
-          <div class="order-info">
+          <div class="order-info" @click="checkOrderDetail(item.id)">
             <div>订单编号</div>
             <div class="order-sn">{{ item.orderSn }}</div>
             <img class="check-icon" src="../images/arrow.png" alt="" />
@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { Empty, PullRefresh, List } from "vant";
+import { Empty, PullRefresh, List, showLoadingToast, closeToast } from "vant";
 import PickerPopup from "@/components/PickerPopup.vue";
 
 import dayjs from "dayjs";
@@ -96,7 +96,9 @@ import type { Achievement } from "../utils/type";
 
 const achievementInfo = ref<Achievement>();
 const curMenuIdx = ref(0);
-const orderList = ref<{ orderSn: string; commissionBase: number }[]>([]);
+const orderList = ref<
+  { id: number; orderSn: string; commissionBase: number }[]
+>([]);
 const timePickerPopupVisible = ref(false);
 const timeOptions = ref<Option[]>([]);
 const curTimeIdx = ref(0);
@@ -146,6 +148,11 @@ const selectMenu = (index: number) => {
 
 let page = 0;
 const setOrderList = async (init = true) => {
+  showLoadingToast({
+    message: "加载中...",
+    duration: 0,
+    forbidClick: true,
+  });
   if (init) {
     page = 0;
     finished.value = false;
@@ -159,6 +166,13 @@ const setOrderList = async (init = true) => {
   if (!list.length) {
     finished.value = true;
   }
+  closeToast();
+};
+
+const checkOrderDetail = (id: number) => {
+  window.wx.miniProgram.navigateTo({
+    url: `/pages/mine/subpages/order-center/subpages/order-detail/index?id=${id}`,
+  });
 };
 </script>
 
@@ -190,7 +204,6 @@ const setOrderList = async (init = true) => {
     color: #110e4b;
     font-size: 0.56rem;
     font-weight: bold;
-    font-family: DINAlternate, DINAlternate;
   }
   .total-data {
     position: absolute;
@@ -239,10 +252,14 @@ const setOrderList = async (init = true) => {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 0.24rem;
     padding: 0 0.24rem;
     height: 0.8rem;
     background: #f8f8f8;
     border-radius: 0.16rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
     .order-info {
       display: flex;
       align-items: center;

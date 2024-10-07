@@ -71,11 +71,11 @@
         <div
           class="date"
           :class="{ selected: curDateIdx === index }"
-          v-for="(item, index) in ['今日', '昨日', '本月', '上月', '全部']"
+          v-for="(item, index) in dateList"
           :key="index"
           @click="selectDate(index)"
         >
-          {{ item }}
+          {{ item.text }}
         </div>
       </div>
       <div class="daily-data-list">
@@ -197,6 +197,13 @@ const route = useRoute();
 const level = ref(1);
 const cashInfo = ref<CommissionCashInfo>();
 const curMenuIdx = ref(0);
+const dateList = [
+  { text: "今日", value: 1 },
+  { text: "昨日", value: 2 },
+  { text: "本月", value: 3 },
+  { text: "上月", value: 4 },
+  { text: "全部", value: 0 },
+];
 const curDateIdx = ref(0);
 const timeData = ref<CommissionTimeData>();
 
@@ -238,9 +245,13 @@ const selectDate = (index: number) => {
 
 const setTimeData = async () => {
   if (curMenuIdx.value === 0) {
-    timeData.value = await getGiftCommissionTimeData(curDateIdx.value + 1);
+    timeData.value = await getGiftCommissionTimeData(
+      dateList[curDateIdx.value].value
+    );
   } else {
-    timeData.value = await getTeamCommissionTimeData(curDateIdx.value + 1);
+    timeData.value = await getTeamCommissionTimeData(
+      dateList[curDateIdx.value].value
+    );
   }
 };
 
@@ -257,7 +268,7 @@ const setGiftOrderList = async (init = false) => {
     page = 0;
     finished.value = false;
   }
-  const list = await getGiftOrderList(curDateIdx.value + 1, ++page);
+  const list = await getGiftOrderList(dateList[curDateIdx.value].value, ++page);
   orderList.value = init ? list : [...orderList.value, ...list];
   if (!list.length) finished.value = true;
   loading.value = false;
@@ -268,7 +279,7 @@ const setTeamOrderList = async (init = false) => {
     page = 0;
     finished.value = false;
   }
-  const list = await getTeamOrderList(curDateIdx.value + 1, ++page);
+  const list = await getTeamOrderList(dateList[curDateIdx.value].value, ++page);
   orderList.value = init ? list : [...orderList.value, ...list];
   if (!list.length) finished.value = true;
   loading.value = false;
