@@ -16,7 +16,9 @@
             alt=""
           />
         </div>
-        <div class="num-desc">诚信星球第{{ item.id }}号乡村振兴推广员</div>
+        <div class="num-desc">
+          诚信星球第{{ item.promoterId }}号乡村振兴推广员
+        </div>
       </div>
     </div>
     <div class="data-wrap">

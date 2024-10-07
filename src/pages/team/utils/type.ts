@@ -54,6 +54,7 @@ export interface Promoter {
   avatar: string;
   nickname: string;
   mobile: string;
+  promoterId: number;
   level: number;
   GMV: number;
   createdAt: string;
