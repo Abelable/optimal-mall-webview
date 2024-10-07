@@ -257,7 +257,7 @@ const setAllList = async (init = false) => {
           width: 0.3rem;
           height: 0.06rem;
           content: "";
-          border-radius: 1.5px;
+          border-radius: 0.15rem;
           background: #f5701d;
         }
       }
@@ -269,12 +269,6 @@ const setAllList = async (init = false) => {
   padding: 0.01rem 0.24rem 0.24rem;
   &.searching {
     margin-top: 1.2rem;
-  }
-  .title {
-    margin: 0.24rem 0;
-    color: #333;
-    font-size: 0.32rem;
-    font-weight: 550;
   }
 }
 </style>
