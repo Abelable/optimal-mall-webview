@@ -171,7 +171,7 @@
 </template>
 
 <script setup lang="ts">
-import { PullRefresh, List, Empty } from "vant";
+import { PullRefresh, List, Empty, closeToast, showLoadingToast } from "vant";
 
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
@@ -260,28 +260,48 @@ const setOrderList = (init = false) => {
     setTeamOrderList(init);
   }
 };
-let page = 0;
+let gitPage = 0;
 const setGiftOrderList = async (init = false) => {
+  showLoadingToast({
+    message: "加载中...",
+    duration: 0,
+    forbidClick: true,
+  });
   if (init) {
-    page = 0;
+    gitPage = 0;
     finished.value = false;
   }
-  const list = await getGiftOrderList(dateList[curDateIdx.value].value, ++page);
+  const list = await getGiftOrderList(
+    dateList[curDateIdx.value].value,
+    ++gitPage
+  );
   orderList.value = init ? list : [...orderList.value, ...list];
   if (!list.length) finished.value = true;
   loading.value = false;
   refreshing.value = false;
+  closeToast();
 };
+
+let teamPage = 0;
 const setTeamOrderList = async (init = false) => {
+  showLoadingToast({
+    message: "加载中...",
+    duration: 0,
+    forbidClick: true,
+  });
   if (init) {
-    page = 0;
+    teamPage = 0;
     finished.value = false;
   }
-  const list = await getTeamOrderList(dateList[curDateIdx.value].value, ++page);
+  const list = await getTeamOrderList(
+    dateList[curDateIdx.value].value,
+    ++teamPage
+  );
   orderList.value = init ? list : [...orderList.value, ...list];
   if (!list.length) finished.value = true;
   loading.value = false;
   refreshing.value = false;
+  closeToast();
 };
 const checkOrderDetail = (id: number) => {
   window.wx.miniProgram.navigateTo({
