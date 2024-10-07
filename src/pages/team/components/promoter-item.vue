@@ -4,7 +4,7 @@
       <img class="avatar" :src="item.avatar" alt="" />
       <div class="info">
         <div class="name">{{ item.nickname }}</div>
-        <div class="mobile">
+        <div class="mobile" @click="mobileVisible = !mobileVisible">
           <span>{{
             mobileVisible
               ? item.mobile
@@ -33,6 +33,7 @@
         c2: item.level === 3,
         c3: item.level === 4,
       }"
+      v-if="item.level"
     >
       {{ ["推广员", "c1", "c2", "c3"][item.level - 1] }}
     </div>

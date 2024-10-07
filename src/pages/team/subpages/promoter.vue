@@ -16,52 +16,72 @@
       />
       <div class="search-btn" @click="search">搜索</div>
     </div>
-  </div>
-  <div class="container">
-    <div v-if="!searching">
-      <div class="title">今日新增</div>
-      <div class="promoter-list" v-if="newList.length">
-        <PromoterItem
-          v-for="(item, index) in newList"
-          :key="index"
-          :item="item"
-        />
-      </div>
-      <Empty v-if="!newList.length" description="暂无新增推广员" />
-
-      <div class="title">今日下单</div>
-      <div class="promoter-list" v-if="orderingList.length">
-        <PromoterItem
-          v-for="(item, index) in orderingList"
-          :key="index"
-          :item="item"
-        />
-      </div>
-      <Empty v-if="!orderingList.length" description="暂无下单推广员" />
-
-      <div class="title">累计所有</div>
-    </div>
-    <PullRefresh class="container" v-model="refreshing" @refresh="onRefresh">
-      <List
-        class="sales-record-list"
-        v-model="loading"
-        :finished="finished"
-        @load="onLoadMore"
-        :finished-text="allList.length ? '没有更多了' : ''"
+    <div class="menu" v-if="!searching">
+      <div
+        class="menu-item"
+        :class="{ selected: curMenuIdx === index }"
+        v-for="(item, index) in ['今日新增', '今日下单', '累计所有']"
+        :key="index"
+        @click="selectMenu(index)"
       >
-        <PromoterItem
-          v-for="(item, index) in allList"
-          :key="index"
-          :item="item"
-        />
-      </List>
-      <Empty v-if="!allList.length" description="暂无推广员" />
-    </PullRefresh>
+        {{ item }}
+      </div>
+    </div>
+  </div>
+  <div class="container" :class="{ searching }">
+    <div v-if="!searching">
+      <div v-if="curMenuIdx === 0">
+        <div class="promoter-list" v-if="newList.length">
+          <PromoterItem
+            v-for="(item, index) in newList"
+            :key="index"
+            :item="item"
+          />
+        </div>
+        <Empty v-if="!newList.length" description="暂无新增推广员" />
+      </div>
+
+      <div v-if="curMenuIdx === 1">
+        <div class="promoter-list" v-if="orderingList.length">
+          <PromoterItem
+            v-for="(item, index) in orderingList"
+            :key="index"
+            :item="item"
+          />
+        </div>
+        <Empty v-if="!orderingList.length" description="暂无下单推广员" />
+      </div>
+    </div>
+    <div v-if="curMenuIdx === 2 || searching">
+      <PullRefresh v-model="refreshing" @refresh="onRefresh">
+        <List
+          class="sales-record-list"
+          v-model="loading"
+          :finished="finished"
+          @load="onLoadMore"
+          :finished-text="allList.length ? '没有更多了' : ''"
+        >
+          <PromoterItem
+            v-for="(item, index) in allList"
+            :key="index"
+            :item="item"
+          />
+        </List>
+        <Empty v-if="!allList.length" description="暂无推广员" />
+      </PullRefresh>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { showToast, Empty, PullRefresh, List } from "vant";
+import {
+  showToast,
+  Empty,
+  PullRefresh,
+  List,
+  showLoadingToast,
+  closeToast,
+} from "vant";
 import PromoterItem from "../components/promoter-item.vue";
 
 import { onMounted, ref } from "vue";
@@ -72,9 +92,13 @@ import {
 } from "../utils/api";
 
 import type { Promoter } from "../utils/type";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 const keywords = ref("");
 const searching = ref(false);
+const curMenuIdx = ref(0);
 const newList = ref<Promoter[]>([]);
 const orderingList = ref<Promoter[]>([]);
 const loading = ref(false);
@@ -83,11 +107,22 @@ const refreshing = ref(false);
 const allList = ref<Promoter[]>([]);
 
 onMounted(() => {
-  setNewList();
-  setOrderingList();
+  selectMenu(
+    route.query?.type && route.query?.type !== "0" ? +route.query?.type - 1 : 0
+  );
 });
 const onRefresh = () => setAllList(true);
 const onLoadMore = () => setAllList();
+
+const selectMenu = (index: number) => {
+  curMenuIdx.value = index;
+  if (index === 0) {
+    setNewList();
+  }
+  if (index === 1) {
+    setOrderingList();
+  }
+};
 
 const clearSearch = () => {
   keywords.value = "";
@@ -104,14 +139,31 @@ const search = () => {
 };
 
 const setNewList = async () => {
+  showLoadingToast({
+    message: "加载中...",
+    duration: 0,
+    forbidClick: true,
+  });
   newList.value = await getTodayNewPromoterList();
+  closeToast();
 };
 const setOrderingList = async () => {
+  showLoadingToast({
+    message: "加载中...",
+    duration: 0,
+    forbidClick: true,
+  });
   orderingList.value = await getTodayOrderingPromoterList();
+  closeToast();
 };
 
 let page = 0;
 const setAllList = async (init = false) => {
+  showLoadingToast({
+    message: "加载中...",
+    duration: 0,
+    forbidClick: true,
+  });
   if (init) {
     page = 0;
     finished.value = false;
@@ -125,6 +177,9 @@ const setAllList = async (init = false) => {
   if (!list.length) {
     finished.value = true;
   }
+  loading.value = false;
+  refreshing.value = false;
+  closeToast();
 };
 </script>
 
@@ -133,13 +188,13 @@ const setAllList = async (init = false) => {
   position: fixed;
   top: 0;
   left: 0;
-  padding: 0.16rem 0.24rem;
   width: 100vw;
   background: #fff;
   z-index: 100;
   .search-bar {
     display: flex;
     align-items: center;
+    margin: 0.16rem 0.24rem;
     height: 0.64rem;
     background: #f7f7fa;
     border-radius: 0.32rem;
@@ -176,10 +231,45 @@ const setAllList = async (init = false) => {
       border-radius: 0.24rem;
     }
   }
+  .menu {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border-top: 1px solid #f5f6f8;
+    .menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      height: 0.8rem;
+      color: #666;
+      font-size: 0.28rem;
+      &.selected {
+        position: relative;
+        color: #f5701d;
+        font-size: 0.3rem;
+        font-weight: bold;
+        &::after {
+          position: absolute;
+          bottom: 0.04rem;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0.3rem;
+          height: 0.06rem;
+          content: "";
+          border-radius: 1.5px;
+          background: #f5701d;
+        }
+      }
+    }
+  }
 }
 .container {
-  margin-top: 0.96rem;
+  margin-top: 2rem;
   padding: 0.01rem 0.24rem 0.24rem;
+  &.searching {
+    margin-top: 1.2rem;
+  }
   .title {
     margin: 0.24rem 0;
     color: #333;

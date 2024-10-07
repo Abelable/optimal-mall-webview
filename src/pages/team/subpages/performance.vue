@@ -166,6 +166,8 @@ const setOrderList = async (init = true) => {
   if (!list.length) {
     finished.value = true;
   }
+  loading.value = false;
+  refreshing.value = false;
   closeToast();
 };
 

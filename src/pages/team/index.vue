@@ -71,25 +71,25 @@
         </div>
       </div>
     </div>
-    <div class="promoter-data-wrap" @click="checkMyPromoters">
+    <div class="promoter-data-wrap" @click="checkMyPromoters(0)">
       <div class="promoter-title-wrap">
         <div class="promoter-title">我的推广员</div>
         <img class="more-icon" src="./images/arrow.png" alt="" />
       </div>
       <div class="promoter-data-list">
-        <div class="promoter-data-item">
+        <div class="promoter-data-item" @click.stop="checkMyPromoters(1)">
           <div class="promoter-data-desc">今日新增推广员数</div>
           <div class="promoter-data">
             {{ promoterData?.todayNewCount || "-" }}
           </div>
         </div>
-        <div class="promoter-data-item">
+        <div class="promoter-data-item" @click.stop="checkMyPromoters(2)">
           <div class="promoter-data-desc">今日下单推广员数</div>
           <div class="promoter-data">
             {{ promoterData?.todayOrderingCount || "-" }}
           </div>
         </div>
-        <div class="promoter-data-item">
+        <div class="promoter-data-item" @click.stop="checkMyPromoters(3)">
           <div class="promoter-data-desc">累积推广员总数</div>
           <div class="promoter-data">{{ promoterData?.totalCount || "-" }}</div>
         </div>
@@ -160,7 +160,8 @@ const setPromoterData = async () => {
 const withdraw = () =>
   router.push(`/team/account?level=${userInfo.value?.level}`);
 
-const checkMyPromoters = () => router.push("/team/promoter");
+const checkMyPromoters = (type: number) =>
+  router.push(`/team/promoter?type=${type}`);
 const upgrade = () => {
   router.push("/team/performance");
 };
