@@ -125,7 +125,7 @@
               </div>
               <div class="order-status-wrap">
                 <div class="order-status">
-                  {{ ["待结算", "待提现", "已结算"][item.status - 1] }}
+                  {{ item.status === 1 ? "待结算" : "已结算" }}
                 </div>
                 <div class="order-time">
                   下单时间：{{ dayjs(item.createdAt).format("YYYY.MM.DD") }}
@@ -483,7 +483,7 @@ const checkOrderDetail = (id: number) => {
     .daily-data {
       color: #000;
       font-size: 0.32rem;
-      font-weight: 550;
+      font-weight: bold;
     }
     .daily-data-desc {
       margin-top: 0.16rem;
