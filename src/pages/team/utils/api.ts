@@ -29,7 +29,7 @@ export const getGiftCommissionTimeData = async (
 export const getTeamCommissionTimeData = async (
   timeType: number
 ): Promise<CommissionTimeData> =>
-  await http("commission/team_time_data", { data: { timeType } });
+  await http("team_commission/time_data", { data: { timeType } });
 
 export const getGiftOrderList = async (
   timeType: number,
@@ -81,13 +81,23 @@ export const getPromoterList = async ({
 };
 
 export const getCommissionOrderList = async (
-  scene: number,
   timeType: number,
   page: number,
   limit = 10
 ): Promise<{ id: number; orderSn: string; commissionBase: number }[]> => {
   const { list = [] } = await http("order/commission_list", {
-    data: cleanObject({ scene, timeType, page, limit }),
+    data: cleanObject({ timeType, page, limit }),
+  });
+  return list;
+};
+
+export const getTeamCommissionOrderList = async (
+  timeType: number,
+  page: number,
+  limit = 10
+): Promise<{ id: number; orderSn: string; commissionBase: number }[]> => {
+  const { list = [] } = await http("order/team_commission_list", {
+    data: cleanObject({ timeType, page, limit }),
   });
   return list;
 };

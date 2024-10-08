@@ -34,7 +34,7 @@
           <div class="amount-type-name">团队奖励</div>
           <div class="type-amount">
             <span style="font-size: 0.28rem">¥</span>
-            <span>{{ cashInfo ? cashInfo.team : "0.00" }}</span>
+            <span>{{ cashInfo ? (+cashInfo.team).toFixed(2) : "0.00" }}</span>
           </div>
         </div>
       </div>
@@ -91,13 +91,13 @@
         </div>
         <div class="daily-data-item">
           <div class="daily-data">
-            {{ timeData ? timeData.pendingAmount : "0.00" }}
+            {{ timeData ? (+timeData.pendingAmount).toFixed(2) : "0.00" }}
           </div>
           <div class="daily-data-desc">待结算金额</div>
         </div>
         <div class="daily-data-item">
           <div class="daily-data">
-            {{ timeData ? timeData.settledAmount : "0.00" }}
+            {{ timeData ? (+timeData.settledAmount).toFixed(2) : "0.00" }}
           </div>
           <div class="daily-data-desc">已结算金额</div>
         </div>
@@ -133,7 +133,11 @@
               </div>
             </div>
             <div class="order-commission-wrap">
-              <div class="order-commission">+{{ item.commission }}</div>
+              <div class="order-commission">
+                +{{
+                  curMenuIdx === 0 ? item.commission : item.commissionAmount
+                }}
+              </div>
               <div class="order-type">
                 {{ curMenuIdx === 0 ? "分享" : "团队" }}
               </div>
@@ -254,6 +258,9 @@ const setTimeData = async () => {
 };
 
 const setOrderList = (init = false) => {
+  if (init) {
+    orderList.value = [];
+  }
   if (curMenuIdx.value === 0) {
     setGiftOrderList(init);
   } else {

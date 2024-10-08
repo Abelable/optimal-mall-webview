@@ -12,9 +12,9 @@
       <span style="font-size: 0.24rem">¥</span>
       <span>{{
         [
-          achievementInfo?.curMonthGMV.toFixed(2),
-          achievementInfo?.lastMonthGMV.toFixed(2),
-          achievementInfo?.beforeLastMonthGMV.toFixed(2),
+          achievementInfo?.curMonthGMV,
+          achievementInfo?.lastMonthGMV,
+          achievementInfo?.beforeLastMonthGMV,
         ][curTimeIdx]
       }}</span>
     </div>
@@ -89,7 +89,11 @@ import PickerPopup from "@/components/PickerPopup.vue";
 
 import dayjs from "dayjs";
 import { onMounted, ref } from "vue";
-import { getCommissionOrderList, getPromoterAchievement } from "../utils/api";
+import {
+  getCommissionOrderList,
+  getTeamCommissionOrderList,
+  getPromoterAchievement,
+} from "../utils/api";
 
 import type { Option } from "@/utils/type";
 import type { Achievement } from "../utils/type";
@@ -157,11 +161,18 @@ const setOrderList = async (init = true) => {
     page = 0;
     finished.value = false;
   }
-  const list = await getCommissionOrderList(
-    curMenuIdx.value + 1,
-    +timeOptions.value[curTimeIdx.value].value,
-    ++page
-  );
+  let list = [];
+  if (curMenuIdx.value === 0) {
+    list = await getCommissionOrderList(
+      +timeOptions.value[curTimeIdx.value].value,
+      ++page
+    );
+  } else {
+    list = await getTeamCommissionOrderList(
+      +timeOptions.value[curTimeIdx.value].value,
+      ++page
+    );
+  }
   orderList.value = init ? list : [...orderList.value, ...list];
   if (!list.length) {
     finished.value = true;
