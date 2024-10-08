@@ -302,6 +302,7 @@ const setTeamOrderList = async (init = false) => {
   }
   const list = await getTeamOrderList(
     dateList[curDateIdx.value].value,
+    [1, 2, 3],
     ++teamPage
   );
   orderList.value = init ? list : [...orderList.value, ...list];

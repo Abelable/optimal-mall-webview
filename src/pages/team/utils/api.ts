@@ -44,11 +44,13 @@ export const getGiftOrderList = async (
 
 export const getTeamOrderList = async (
   timeType: number,
+  statusList: number[],
   page: number,
   limit = 10
 ): Promise<Order[]> => {
   const { list = [] } = await http("order/team_commission_list", {
-    data: { timeType, page, limit },
+    method: "POST",
+    data: { timeType, statusList, page, limit },
   });
   return list;
 };
@@ -84,19 +86,8 @@ export const getCommissionOrderList = async (
   timeType: number,
   page: number,
   limit = 10
-): Promise<{ id: number; orderSn: string; commissionBase: number }[]> => {
+): Promise<Order[]> => {
   const { list = [] } = await http("order/commission_list", {
-    data: cleanObject({ timeType, page, limit }),
-  });
-  return list;
-};
-
-export const getTeamCommissionOrderList = async (
-  timeType: number,
-  page: number,
-  limit = 10
-): Promise<{ id: number; orderSn: string; commissionBase: number }[]> => {
-  const { list = [] } = await http("order/team_commission_list", {
     data: cleanObject({ timeType, page, limit }),
   });
   return list;

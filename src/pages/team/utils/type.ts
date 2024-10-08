@@ -39,6 +39,7 @@ export interface Order {
   status: number;
   createdAt: string;
   commission: number;
+  commissionBase: number;
   commissionAmount: number;
   goodsList?: Coods[];
   goods?: Coods;

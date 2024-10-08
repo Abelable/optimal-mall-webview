@@ -91,18 +91,16 @@ import dayjs from "dayjs";
 import { onMounted, ref } from "vue";
 import {
   getCommissionOrderList,
-  getTeamCommissionOrderList,
+  getTeamOrderList,
   getPromoterAchievement,
 } from "../utils/api";
 
 import type { Option } from "@/utils/type";
-import type { Achievement } from "../utils/type";
+import type { Achievement, Order } from "../utils/type";
 
 const achievementInfo = ref<Achievement>();
 const curMenuIdx = ref(0);
-const orderList = ref<
-  { id: number; orderSn: string; commissionBase: number }[]
->([]);
+const orderList = ref<Order[]>([]);
 const timePickerPopupVisible = ref(false);
 const timeOptions = ref<Option[]>([]);
 const curTimeIdx = ref(0);
@@ -168,8 +166,9 @@ const setOrderList = async (init = true) => {
       ++page
     );
   } else {
-    list = await getTeamCommissionOrderList(
+    list = await getTeamOrderList(
       +timeOptions.value[curTimeIdx.value].value,
+      [2, 3],
       ++page
     );
   }
