@@ -88,7 +88,8 @@ export const getCommissionOrderList = async (
   limit = 10
 ): Promise<Order[]> => {
   const { list = [] } = await http("order/commission_list", {
-    data: cleanObject({ timeType, page, limit }),
+    method: "POST",
+    data: { timeType, statusList: [2, 3], page, limit },
   });
   return list;
 };
