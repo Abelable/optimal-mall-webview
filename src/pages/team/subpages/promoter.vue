@@ -110,9 +110,15 @@ onMounted(() => {
   selectMenu(
     route.query?.type && route.query?.type !== "0" ? +route.query?.type - 1 : 0
   );
+  setAllList();
 });
+
 const onRefresh = () => setAllList(true);
-const onLoadMore = () => setAllList();
+const onLoadMore = () => {
+  if (curMenuIdx.value === 2 || searching.value) {
+    setAllList();
+  }
+};
 
 const selectMenu = (index: number) => {
   curMenuIdx.value = index;
