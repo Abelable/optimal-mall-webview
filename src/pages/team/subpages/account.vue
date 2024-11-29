@@ -40,7 +40,7 @@
       </div>
       <div class="withdraw-tips-wrap row">
         <div class="withdraw-time-tips">每月25～31号可提现上月的结算收益</div>
-        <div class="withdraw-rules-btn">
+        <div class="withdraw-rules-btn" @click="checkWithdrawRule">
           <div>提现规则</div>
           <img class="more-arrow" src="../images/more.png" />
         </div>
@@ -178,7 +178,7 @@
 import { PullRefresh, List, Empty, closeToast, showLoadingToast } from "vant";
 
 import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import dayjs from "dayjs";
 import {
   getCommissionCashInfo,
@@ -195,6 +195,7 @@ import type {
 } from "../utils/type";
 
 const route = useRoute();
+const router = useRouter();
 
 const level = ref(1);
 const cashInfo = ref<CommissionCashInfo>();
@@ -228,10 +229,17 @@ const setCommissionCashInfo = async () => {
 };
 
 const withdraw = () => {
-  console.log("withdraw");
+  window.wx.miniProgram.navigateTo({
+    url: `pages/mine/subpages/account/subpages/withdraw/index?scene=3&amount=${cashInfo.value?.team}`,
+  });
 };
 const checkWithdrawRecord = () => {
-  console.log("checkWithdrawRecord");
+  window.wx.miniProgram.navigateTo({
+    url: "pages/mine/subpages/account/subpages/withdraw-record/index",
+  });
+};
+const checkWithdrawRule = () => {
+  router.push("/agreements/withdraw_rules");
 };
 
 const selectMenu = (index: number) => {
