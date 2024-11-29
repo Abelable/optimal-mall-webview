@@ -229,8 +229,11 @@ const setCommissionCashInfo = async () => {
 };
 
 const withdraw = () => {
+  const { share, team } = cashInfo.value || {};
   window.wx.miniProgram.navigateTo({
-    url: `/pages/mine/subpages/account/subpages/withdraw/index?scene=3&amount=${cashInfo.value?.team}`,
+    url: `/pages/mine/subpages/account/subpages/withdraw/index?scene=3&amount=${
+      Number(share) + Number(team)
+    }`,
   });
 };
 const checkWithdrawRecord = () => {
