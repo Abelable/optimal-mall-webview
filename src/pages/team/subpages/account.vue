@@ -230,12 +230,12 @@ const setCommissionCashInfo = async () => {
 
 const withdraw = () => {
   window.wx.miniProgram.navigateTo({
-    url: `pages/mine/subpages/account/subpages/withdraw/index?scene=3&amount=${cashInfo.value?.team}`,
+    url: `/pages/mine/subpages/account/subpages/withdraw/index?scene=3&amount=${cashInfo.value?.team}`,
   });
 };
 const checkWithdrawRecord = () => {
   window.wx.miniProgram.navigateTo({
-    url: "pages/mine/subpages/account/subpages/withdraw-record/index",
+    url: "/pages/mine/subpages/account/subpages/withdraw-record/index",
   });
 };
 const checkWithdrawRule = () => {
