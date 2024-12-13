@@ -4,7 +4,7 @@
       <img class="avatar" :src="item.avatar" alt="" />
       <div class="info">
         <div class="name">{{ item.nickname }}</div>
-        <div class="mobile" @click="mobileVisible = !mobileVisible">
+        <!-- <div class="mobile" @click="mobileVisible = !mobileVisible">
           <span>{{
             mobileVisible
               ? item.mobile
@@ -15,7 +15,7 @@
             :src="require(`../images/${mobileVisible ? 'show' : 'hide'}.png`)"
             alt=""
           />
-        </div>
+        </div> -->
         <div class="num-desc">
           诚信星球第{{ item.promoterId }}号乡村振兴推广员
         </div>
@@ -43,13 +43,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+// import { ref } from "vue";
 import type { Promoter } from "../utils/type";
 import dayjs from "dayjs";
 
 defineProps<{ item: Promoter }>();
 
-const mobileVisible = ref(false);
+// const mobileVisible = ref(false);
 </script>
 
 <style lang="scss" scoped>
