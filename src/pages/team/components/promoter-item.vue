@@ -3,21 +3,10 @@
     <div class="info-wrap">
       <img class="avatar" :src="item.avatar" alt="" />
       <div class="info">
-        <div class="name">
+        <div class="name">{{ item.nickname }}</div>
+        <div class="mobile">
           {{ `${item.mobile.slice(0, 3)}****${item.mobile.slice(-4)}` }}
         </div>
-        <!-- <div class="mobile" @click="mobileVisible = !mobileVisible">
-          <span>{{
-            mobileVisible
-              ? item.mobile
-              : `${item.mobile.slice(0, 3)}****${item.mobile.slice(-4)}`
-          }}</span>
-          <img
-            class="visible-icon"
-            :src="require(`../images/${mobileVisible ? 'show' : 'hide'}.png`)"
-            alt=""
-          />
-        </div> -->
         <div class="num-desc">
           诚信星球第{{ item.promoterId }}号乡村振兴推广员
         </div>
