@@ -3,7 +3,9 @@
     <div class="info-wrap">
       <img class="avatar" :src="item.avatar" alt="" />
       <div class="info">
-        <div class="name">{{ item.nickname }}</div>
+        <div class="name">
+          {{ `${item.mobile.slice(0, 3)}****${item.mobile.slice(-4)}` }}
+        </div>
         <!-- <div class="mobile" @click="mobileVisible = !mobileVisible">
           <span>{{
             mobileVisible
