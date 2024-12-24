@@ -65,7 +65,12 @@
           <div class="order-info" @click="checkOrderDetail(item.id)">
             <div>订单编号</div>
             <div class="order-sn">{{ item.orderSn }}</div>
-            <img class="check-icon" src="../images/arrow.png" alt="" />
+            <img
+              class="check-icon"
+              v-if="curMenuIdx === 0"
+              src="../images/arrow.png"
+              alt=""
+            />
           </div>
           <div class="record-amount">+{{ item.commissionBase }}</div>
         </div>
@@ -182,6 +187,9 @@ const setOrderList = async (init = true) => {
 };
 
 const checkOrderDetail = (id: number) => {
+  if (curMenuIdx.value === 1) {
+    return;
+  }
   window.wx.miniProgram.navigateTo({
     url: `/pages/mine/subpages/order-center/subpages/order-detail/index?id=${id}`,
   });
