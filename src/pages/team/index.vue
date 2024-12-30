@@ -18,7 +18,9 @@
       class="upgradation-wrap"
       v-if="userInfo"
       :style="{
-        'background-image': `url(${require(`./images/upgradation_bg_c${userInfo?.level}.png`)})`,
+        'background-image': `url(${require(`./images/upgradation_bg_c${
+          userInfo?.level - 1
+        }.png`)})`,
       }"
     >
       <div class="progress-desc">
