@@ -12,9 +12,9 @@
       <span style="font-size: 0.24rem">¥</span>
       <span>{{
         [
-          achievementInfo?.curMonthGMV.toFixed(2),
-          achievementInfo?.lastMonthGMV.toFixed(2),
-          achievementInfo?.beforeLastMonthGMV.toFixed(2),
+          Number(achievementInfo?.curMonthGMV).toFixed(2),
+          Number(achievementInfo?.lastMonthGMV).toFixed(2),
+          Number(achievementInfo?.beforeLastMonthGMV).toFixed(2),
         ][curTimeIdx]
       }}</span>
     </div>

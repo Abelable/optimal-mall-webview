@@ -119,10 +119,7 @@
         >
           <div class="order-info">
             <div class="order-sn-wrap">
-              <div class="order-sn" @click="checkOrderDetail(item.id)">
-                <div>订单编号：{{ item.orderSn }}</div>
-                <img class="order-sn-arrow" src="../images/arrow.png" />
-              </div>
+              <div class="order-sn">订单编号：{{ item.orderSn }}</div>
               <div class="order-status-wrap">
                 <div class="order-status">
                   {{ item.status === 1 ? "待结算" : "已结算" }}
@@ -321,11 +318,6 @@ const setTeamOrderList = async (init = false) => {
   loading.value = false;
   refreshing.value = false;
   closeToast();
-};
-const checkOrderDetail = (id: number) => {
-  window.wx.miniProgram.navigateTo({
-    url: `/pages/mine/subpages/order-center/subpages/order-detail/index?id=${id}`,
-  });
 };
 </script>
 
