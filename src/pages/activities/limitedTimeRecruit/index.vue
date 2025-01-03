@@ -22,6 +22,26 @@
             <div class="rights-name">{{ item }}</div>
           </div>
         </div>
+        <div class="rights-wrap">
+          <div
+            class="rights-item"
+            v-for="(item, index) in rightsList.slice(4)"
+            :key="index"
+          >
+            <img
+              class="rights-icon"
+              :src="require(`./images/rights_${index + 5}.png`)"
+              alt=""
+            />
+            <div class="rights-name">{{ item }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="notice-title">活动期间</div>
+        <div class="notice-content">
+          任意购买一款下方产品即可成为乡村振兴推广员
+        </div>
       </div>
     </div>
     <img class="left-illus" src="./images/left_illus.png" alt="" />
@@ -45,6 +65,7 @@ const rightsList = [
 <style lang="scss" scoped>
 .header {
   position: relative;
+  padding-bottom: 1.5rem;
   background: #f0d4ad;
   .bg {
     width: 100%;
@@ -55,6 +76,7 @@ const rightsList = [
     left: 50%;
     transform: translateX(-50%);
     .card {
+      margin-bottom: 0.12rem;
       padding: 0.36rem;
       width: 6.9rem;
       background: #fffaf1;
@@ -71,6 +93,36 @@ const rightsList = [
           width: 0.16rem;
           height: 0.3rem;
         }
+      }
+      .rights-wrap {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 0.5rem;
+        padding: 0 0.12rem;
+        .rights-item {
+          font-size: 0;
+          text-align: center;
+          .rights-icon {
+            width: 0.52rem;
+            height: 0.52rem;
+          }
+          .rights-name {
+            margin-top: 0.12rem;
+            color: #3c3f42;
+            font-size: 0.2rem;
+          }
+        }
+      }
+      .notice-title {
+        color: #f5701d;
+        font-size: 0.24rem;
+        font-weight: 600;
+      }
+      .notice-content {
+        margin-top: 0.08rem;
+        color: #14191f;
+        font-size: 0.24rem;
+        font-weight: 600;
       }
     }
   }
