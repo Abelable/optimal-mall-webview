@@ -1,0 +1,93 @@
+<template>
+  <div class="header">
+    <img class="bg" src="./images/bg.png" alt="" />
+    <div class="content-wrap">
+      <div class="card">
+        <div class="card-title">
+          <img class="leaf" src="./images/left_leaf.png" alt="" />
+          <div>乡村振兴推广员的权益</div>
+          <img class="leaf" src="./images/right_leaf.png" alt="" />
+        </div>
+        <div class="rights-wrap">
+          <div
+            class="rights-item"
+            v-for="(item, index) in rightsList.slice(0, 4)"
+            :key="index"
+          >
+            <img
+              class="rights-icon"
+              :src="require(`./images/rights_${index + 1}.png`)"
+              alt=""
+            />
+            <div class="rights-name">{{ item }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <img class="left-illus" src="./images/left_illus.png" alt="" />
+    <img class="right-illus" src="./images/right_illus.png" alt="" />
+  </div>
+</template>
+
+<script setup lang="ts">
+const rightsList = [
+  "自买省心",
+  "分享放心",
+  "社区团购",
+  "IP赋能",
+  "专属社群",
+  "专属身份标识",
+  "1V1服务",
+  "政府背书",
+];
+</script>
+
+<style lang="scss" scoped>
+.header {
+  position: relative;
+  background: #f0d4ad;
+  .bg {
+    width: 100%;
+  }
+  .content-wrap {
+    position: absolute;
+    top: 8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    .card {
+      padding: 0.36rem;
+      width: 6.9rem;
+      background: #fffaf1;
+      border-radius: 0.32rem;
+      .card-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #3c3f42;
+        font-size: 0.32rem;
+        font-weight: 600;
+        .leaf {
+          margin: 0 0.08rem;
+          width: 0.16rem;
+          height: 0.3rem;
+        }
+      }
+    }
+  }
+  .left-illus,
+  .right-illus {
+    position: absolute;
+    top: 6.3rem;
+    width: 1.66rem;
+    height: 2.76rem;
+  }
+  .left-illus {
+    top: 6.3rem;
+    left: 0;
+  }
+  .right-illus {
+    top: 6.2rem;
+    right: 0;
+  }
+}
+</style>
