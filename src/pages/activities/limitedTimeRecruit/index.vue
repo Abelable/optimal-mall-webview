@@ -57,7 +57,7 @@
         :key="index"
         @click="selectMenu(index)"
       >
-        {{ item }}
+        {{ item.name }}
       </div>
     </div>
     <img
@@ -66,10 +66,32 @@
       src="./images/menu.png"
     />
   </div>
+
+  <div class="goods-list">
+    <div class="goods-item" v-for="(item, index) in goodsList" :key="index">
+      <img class="goods-cover" :src="item.cover" alt="" />
+      <div class="goods-content">
+        <div class="goods-name">{{ item.name }}</div>
+        <div class="goods-price-wrap">
+          <div class="goods-price">
+            <span class="price-unit">¥</span>
+            <span>{{ item.price }}</span>
+          </div>
+          <img class="add-icon" src="./images/add.png" alt="" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-more-tips" v-if="goodsList.length">～没有更多了～</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { closeToast, showLoadingToast } from "vant";
+import { getCategoryOptions, getGoodsList } from "./utils/api";
+
+import type { CategoryOption, Goods } from "./utils/type";
 
 const rightsList = [
   "自买省心",
@@ -81,21 +103,33 @@ const rightsList = [
   "1V1服务",
   "政府背书",
 ];
-const menuList = [
-  "分类",
-  "分类",
-  "分类",
-  "分类",
-  "分类",
-  "分类",
-  "分类",
-  "分类",
-];
+const menuList = ref<CategoryOption[]>([]);
 const curMenuIdx = ref(0);
+const goodsList = ref<Goods[]>([]);
+
+onMounted(async () => {
+  await setMenuList();
+  setGoodsList();
+});
 
 const selectMenu = (index: number) => {
-  console.log(index);
+  curMenuIdx.value = index;
+  setGoodsList();
 };
+
+const setMenuList = async () => {
+  menuList.value = await getCategoryOptions();
+};
+const setGoodsList = async () => {
+  showLoadingToast({
+    message: "加载中...",
+    duration: 0,
+    forbidClick: true,
+  });
+  goodsList.value = await getGoodsList(menuList.value[curMenuIdx.value].id);
+  closeToast();
+};
+
 const showMenuPickerModal = () => {
   console.log("showMenuPickerModal");
 };
@@ -185,7 +219,7 @@ const showMenuPickerModal = () => {
 .menu-wrap {
   display: flex;
   align-items: center;
-  padding: 0.32rem 0.2rem;
+  padding: 0.24rem 0.2rem;
   .menu {
     font-size: 0;
     flex: 1;
@@ -214,5 +248,63 @@ const showMenuPickerModal = () => {
     width: 0.56rem;
     height: 0.56rem;
   }
+}
+
+.goods-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 0.24rem;
+  .goods-item {
+    margin-bottom: 0.2rem;
+    margin-right: 0.2rem;
+    width: 2.2rem;
+    height: 3.16rem;
+    font-size: 0;
+    background: #fff;
+    border-radius: 0.06rem;
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
+    .goods-cover {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 0.06rem;
+    }
+    .goods-content {
+      padding: 0.1rem;
+      .goods-name {
+        color: #111111;
+        font-size: 0.2rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
+      .goods-price-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 0.1rem;
+        .goods-price {
+          color: #eb2240;
+          font-size: 0.2rem;
+          .price-unit {
+            font-size: 0.14rem;
+          }
+        }
+        .add-icon {
+          width: 0.32rem;
+          height: 0.32rem;
+        }
+      }
+    }
+  }
+}
+.no-more-tips {
+  padding: 0.1rem 0 0.36rem;
+  color: #999;
+  font-size: 0.24rem;
+  text-align: center;
 }
 </style>
