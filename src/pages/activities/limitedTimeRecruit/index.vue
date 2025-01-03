@@ -68,7 +68,12 @@
   </div>
 
   <div class="goods-list">
-    <div class="goods-item" v-for="(item, index) in goodsList" :key="index">
+    <div
+      class="goods-item"
+      v-for="(item, index) in goodsList"
+      :key="index"
+      @click="checkGoods(item.id)"
+    >
       <img class="goods-cover" :src="item.cover" alt="" />
       <div class="goods-content">
         <div class="goods-name">{{ item.name }}</div>
@@ -153,6 +158,11 @@ const setGoodsList = async () => {
   });
   goodsList.value = await getGoodsList(menuList.value[curMenuIdx.value].id);
   closeToast();
+};
+const checkGoods = (id: number) => {
+  window.wx.miniProgram.navigateTo({
+    url: `/pages/home/subpages/goods-detail/index?id=${id}`,
+  });
 };
 </script>
 
