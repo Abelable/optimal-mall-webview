@@ -62,7 +62,7 @@
     </div>
     <img
       class="all-menu"
-      @click="showMenuPickerModal"
+      @click="menuPickerModalVisible = true"
       src="./images/menu.png"
     />
   </div>
@@ -84,6 +84,30 @@
   </div>
 
   <div class="no-more-tips" v-if="goodsList.length">～没有更多了～</div>
+
+  <div
+    class="modal-mask"
+    v-if="menuPickerModalVisible"
+    @click="menuPickerModalVisible = false"
+  >
+    <div class="menu-picker-modal" @click.stop="">
+      <div class="modal-title">选择分类</div>
+      <div class="menu-options">
+        <div
+          class="menu-option"
+          :class="{ picked: curMenuIdx === index }"
+          v-for="(item, index) in menuList"
+          :key="index"
+          @click="selectMenu(index)"
+        >
+          {{ item.name }}
+        </div>
+      </div>
+      <div class="confirm-btn" @click="menuPickerModalVisible = false">
+        确定
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -106,6 +130,7 @@ const rightsList = [
 const menuList = ref<CategoryOption[]>([]);
 const curMenuIdx = ref(0);
 const goodsList = ref<Goods[]>([]);
+const menuPickerModalVisible = ref(false);
 
 onMounted(async () => {
   await setMenuList();
@@ -128,10 +153,6 @@ const setGoodsList = async () => {
   });
   goodsList.value = await getGoodsList(menuList.value[curMenuIdx.value].id);
   closeToast();
-};
-
-const showMenuPickerModal = () => {
-  console.log("showMenuPickerModal");
 };
 </script>
 
@@ -306,5 +327,71 @@ const showMenuPickerModal = () => {
   color: #999;
   font-size: 0.24rem;
   text-align: center;
+}
+
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  .menu-picker-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding-bottom: 39px;
+    width: 300px;
+    min-height: 320px;
+    background: #fff;
+    border-radius: 15px;
+    z-index: 100;
+    .modal-title {
+      margin-top: 15px;
+      color: #333;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .menu-options {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 15px;
+      padding-right: 0;
+      .menu-option {
+        margin-right: 0.3rem;
+        margin-bottom: 0.2rem;
+        padding: 0 0.46rem;
+        height: 0.56rem;
+        width: fit-content;
+        color: #6a6f75;
+        font-size: 0.28rem;
+        line-height: 0.54rem;
+        background: #f1f5f7;
+        border-radius: 0.28rem;
+        border: 1px solid #f1f5f7;
+        &.picked {
+          color: #f5701d;
+          background: #fff3ec;
+          border: 1px solid #f5701d;
+        }
+      }
+    }
+    .confirm-btn {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 43px;
+      color: #1a2040;
+      font-size: 14px;
+      font-weight: 500;
+      border-top: 1px solid #eaecef;
+    }
+  }
 }
 </style>
