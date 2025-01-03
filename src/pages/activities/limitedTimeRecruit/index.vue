@@ -47,9 +47,30 @@
     <img class="left-illus" src="./images/left_illus.png" alt="" />
     <img class="right-illus" src="./images/right_illus.png" alt="" />
   </div>
+
+  <div class="menu-wrap">
+    <div class="menu">
+      <div
+        class="menu-item"
+        :class="{ selected: curMenuIdx === index }"
+        v-for="(item, index) in menuList"
+        :key="index"
+        @click="selectMenu(index)"
+      >
+        {{ item }}
+      </div>
+    </div>
+    <img
+      class="all-menu"
+      @click="showMenuPickerModal"
+      src="./images/menu.png"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+
 const rightsList = [
   "自买省心",
   "分享放心",
@@ -60,6 +81,24 @@ const rightsList = [
   "1V1服务",
   "政府背书",
 ];
+const menuList = [
+  "分类",
+  "分类",
+  "分类",
+  "分类",
+  "分类",
+  "分类",
+  "分类",
+  "分类",
+];
+const curMenuIdx = ref(0);
+
+const selectMenu = (index: number) => {
+  console.log(index);
+};
+const showMenuPickerModal = () => {
+  console.log("showMenuPickerModal");
+};
 </script>
 
 <style lang="scss" scoped>
@@ -140,6 +179,40 @@ const rightsList = [
   .right-illus {
     top: 6.2rem;
     right: 0;
+  }
+}
+
+.menu-wrap {
+  display: flex;
+  align-items: center;
+  padding: 0.32rem 0.2rem;
+  .menu {
+    font-size: 0;
+    flex: 1;
+    white-space: nowrap;
+    overflow-x: scroll;
+    .menu-item {
+      display: inline-block;
+      margin-right: 0.14rem;
+      padding: 0 0.46rem;
+      height: 0.56rem;
+      color: #6a6f75;
+      font-size: 0.28rem;
+      line-height: 0.54rem;
+      background: #fff;
+      border-radius: 0.28rem;
+      border: 1px solid #fff;
+      &.selected {
+        color: #f5701d;
+        background: #fff3ec;
+        border: 1px solid #f5701d;
+      }
+    }
+  }
+  .all-menu {
+    margin-left: 0.24rem;
+    width: 0.56rem;
+    height: 0.56rem;
   }
 }
 </style>
