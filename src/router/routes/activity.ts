@@ -9,6 +9,14 @@ const team: Array<RouteRecordRaw> = [
     },
     component: () => import("@/pages/activities/limitedTimeRecruit/index.vue"),
   },
+  {
+    path: "/activity/new_year",
+    name: "activity_new_year",
+    meta: {
+      title: "年货节",
+    },
+    component: () => import("@/pages/activities/newYear/index.vue"),
+  },
 ];
 
 export default team;
