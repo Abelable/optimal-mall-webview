@@ -1,7 +1,6 @@
 <template>
   <div class="goods-item">
-    <img class="goods-bg" src="../images/goods_item_bg.png" alt="" />
-    <img class="goods-cover" :src="info.cover" alt="" />
+    <img class="goods-cover" :src="info.activityCover || info.cover" alt="" />
     <div class="goods-name">{{ info.name }}</div>
     <div class="goods-intro">{{ info.introduction }}</div>
     <div class="price-wrap">
@@ -24,15 +23,11 @@ defineProps<{ info: Goods }>();
 <style lang="scss" scoped>
 .goods-item {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 2.18rem;
-  height: 3.5rem;
-  margin-right: 0.14rem;
-  margin-bottom: 0.2rem;
-  padding: 0.12rem;
-  font-size: 0;
+  margin-bottom: 0.32rem;
+  padding: 0.24rem;
+  height: 4.4rem;
+  background: #e6be90;
+  border-radius: 0.2rem;
   .goods-bg {
     position: absolute;
     top: 0;
@@ -41,16 +36,18 @@ defineProps<{ info: Goods }>();
     height: 100%;
   }
   .goods-cover {
-    width: 2rem;
-    height: 2rem;
+    width: 100%;
+    height: 2.8rem;
+    object-fit: cover;
     border-radius: 0.12rem;
   }
   .goods-name {
-    margin-top: 0.1rem;
+    margin-top: 0.26rem;
+    width: 3rem;
     color: #691e13;
-    font-size: 0.24rem;
-    font-family: STSongti-SC, STSongti-SC;
+    font-size: 0.36rem;
     font-weight: 900;
+    font-family: STSongti-SC, STSongti-SC;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -59,8 +56,9 @@ defineProps<{ info: Goods }>();
   }
   .goods-intro {
     margin-top: 0.04rem;
+    width: 3rem;
     color: #691e13;
-    font-size: 0.16rem;
+    font-size: 0.26rem;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -69,15 +67,14 @@ defineProps<{ info: Goods }>();
   }
   .price-wrap {
     position: absolute;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%);
+    right: 0.18rem;
+    bottom: -0.14rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 0.12rem;
-    width: 2rem;
-    height: 0.6rem;
+    padding: 0 0.24rem;
+    width: 3.2rem;
+    height: 1.2rem;
     .price-bg {
       position: absolute;
       top: 0;
@@ -87,11 +84,11 @@ defineProps<{ info: Goods }>();
     }
     .price {
       color: #fdfde8;
-      font-size: 0.28rem;
+      font-size: 0.48rem;
       font-weight: 600;
       font-family: PingFangSC, PingFang SC;
       .price-unit {
-        font-size: 0.16rem;
+        font-size: 0.3rem;
         font-weight: 300;
       }
     }
@@ -99,13 +96,13 @@ defineProps<{ info: Goods }>();
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 0.8rem;
-      height: 0.26rem;
+      width: 1.2rem;
+      height: 0.4rem;
       color: #691e13;
-      font-size: 0.14rem;
+      font-size: 0.2rem;
       font-weight: 900;
       font-family: STSongti-SC, STSongti-SC;
-      border-radius: 0.13rem;
+      border-radius: 0.26rem;
       background: linear-gradient(106deg, #fcf8df 0%, #edc090 100%);
       box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     }

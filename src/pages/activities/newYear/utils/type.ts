@@ -6,6 +6,7 @@ export interface RegionOption {
 export interface Goods {
   id: number;
   cover: string;
+  activityCover: string;
   name: string;
   introduction: string;
   price: number;

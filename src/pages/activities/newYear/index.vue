@@ -14,12 +14,44 @@
       <img class="frame" src="./images/frame_2.png" alt="" />
       <div class="content">
         <div class="title">探寻文化创意，迎接年货新花样</div>
+        <div class="cultrue-goods-list">
+          <CultureGoodsItem
+            v-for="item in cultureGoodsList"
+            :key="item.id"
+            :info="item"
+          />
+        </div>
       </div>
     </div>
     <div class="part">
       <img class="frame" src="./images/frame_3.png" alt="" />
       <div class="content">
         <div class="title">乡愁是一段归家的思念，更是一种无法形容的味道</div>
+        <div class="region-wrap">
+          <div class="region">
+            <div
+              class="region-item"
+              :class="{ selected: curRegionIdx === index }"
+              v-for="(item, index) in regionOptions"
+              :key="index"
+              @click="selectRegion(index)"
+            >
+              {{ item.name }}
+            </div>
+          </div>
+          <img
+            class="all-region"
+            @click="regionPickerModalVisible = true"
+            src="./images/menu.png"
+          />
+        </div>
+        <div class="local-goods-list">
+          <GoodsItem
+            v-for="item in localGoodsList"
+            :key="item.id"
+            :info="item"
+          />
+        </div>
       </div>
     </div>
     <div class="footer">
@@ -68,6 +100,7 @@
 
 <script setup lang="ts">
 import GoodsItem from "./components/GoodsItem.vue";
+import CultureGoodsItem from "./components/CultureGoodsItem.vue";
 
 import { onMounted, ref } from "vue";
 import {
@@ -87,14 +120,20 @@ const goodsList = ref<Goods[]>([]);
 const cultureGoodsList = ref<Goods[]>([]);
 const regionOptions = ref<RegionOption[]>([]);
 const curRegionIdx = ref(0);
+const regionPickerModalVisible = ref(false);
 const localGoodsList = ref<Goods[]>([]);
 
 onMounted(async () => {
   setGoodsList();
   setCultureGoodsList();
   await setRegionOptions();
-  // setLocalGoodsList();
+  setLocalGoodsList();
 });
+
+const selectRegion = (index: number) => {
+  curRegionIdx.value = index;
+  setLocalGoodsList();
+};
 
 const setGoodsList = async () => {
   goodsList.value = await getGoodsList();
@@ -138,10 +177,55 @@ const setLocalGoodsList = async () => {
         font-size: 0.24rem;
         text-align: center;
       }
+      .region-wrap {
+        display: flex;
+        align-items: center;
+        padding: 0.24rem 0.2rem;
+        padding-right: 0;
+        .region {
+          font-size: 0;
+          flex: 1;
+          white-space: nowrap;
+          overflow-x: scroll;
+          .region-item {
+            display: inline-block;
+            margin-right: 0.14rem;
+            padding: 0 0.24rem;
+            height: 0.56rem;
+            color: #d59999;
+            font-size: 0.28rem;
+            line-height: 0.54rem;
+            background: #873928;
+            border-radius: 0.16rem;
+            &.selected {
+              color: #6a1e13;
+              background: #f9dfc8;
+            }
+          }
+        }
+        .all-region {
+          margin-left: 0.24rem;
+          width: 0.56rem;
+          height: 0.56rem;
+        }
+      }
       .goods-list {
         display: flex;
         flex-wrap: wrap;
         margin-top: 0.2rem;
+        padding-left: 0.13rem;
+        height: 7.3rem;
+        overflow-y: scroll;
+      }
+      .cultrue-goods-list {
+        margin-top: 0.2rem;
+        padding: 0 0.13rem;
+        height: 9.2rem;
+        overflow-y: scroll;
+      }
+      .local-goods-list {
+        display: flex;
+        flex-wrap: wrap;
         padding-left: 0.13rem;
         height: 7.3rem;
         overflow-y: scroll;
