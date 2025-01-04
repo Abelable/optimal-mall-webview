@@ -5,6 +5,9 @@
       <img class="frame" src="./images/frame_1.png" alt="" />
       <div class="content">
         <div class="title">年货满满归家路，不论成就如何，生活总要满载欢笑</div>
+        <div class="goods-list">
+          <GoodsItem v-for="item in goodsList" :key="item.id" :info="item" />
+        </div>
       </div>
     </div>
     <div class="part">
@@ -64,11 +67,49 @@
 </template>
 
 <script setup lang="ts">
+import GoodsItem from "./components/GoodsItem.vue";
+
+import { onMounted, ref } from "vue";
+import {
+  getCultureGoodsList,
+  getGoodsList,
+  getLocalGoodsList,
+  getRegionOptions,
+} from "./utils/api";
+import type { Goods, RegionOption } from "./utils/type";
+
 const awardList = [
   "赤峰小米区域公共品牌内蒙古赤峰大庙镇歆谷乡黄小米5斤",
   "内蒙古赤峰大庙草莓番茄孕妇水果西红柿5斤",
   "湖北宜昌秭归县秭归脐橙1箱/9斤国家地理标志产品",
 ];
+const goodsList = ref<Goods[]>([]);
+const cultureGoodsList = ref<Goods[]>([]);
+const regionOptions = ref<RegionOption[]>([]);
+const curRegionIdx = ref(0);
+const localGoodsList = ref<Goods[]>([]);
+
+onMounted(async () => {
+  setGoodsList();
+  setCultureGoodsList();
+  await setRegionOptions();
+  // setLocalGoodsList();
+});
+
+const setGoodsList = async () => {
+  goodsList.value = await getGoodsList();
+};
+const setCultureGoodsList = async () => {
+  cultureGoodsList.value = await getCultureGoodsList();
+};
+const setRegionOptions = async () => {
+  regionOptions.value = await getRegionOptions();
+};
+const setLocalGoodsList = async () => {
+  localGoodsList.value = await getLocalGoodsList(
+    regionOptions.value[curRegionIdx.value].id
+  );
+};
 </script>
 
 <style lang="scss" scoped>
@@ -96,6 +137,14 @@ const awardList = [
         color: #fcfbd2;
         font-size: 0.24rem;
         text-align: center;
+      }
+      .goods-list {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 0.2rem;
+        padding-left: 0.13rem;
+        height: 7.3rem;
+        overflow-y: scroll;
       }
     }
   }
