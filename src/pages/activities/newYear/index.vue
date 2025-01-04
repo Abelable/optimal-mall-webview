@@ -92,7 +92,7 @@
     </div>
   </div>
 
-  <div class="bag-wrap">
+  <div class="bag-wrap" @click="checkCart">
     <img class="bag" src="./images/bag.png" alt="" />
     <div class="bag-num" v-show="newYearBagCount">{{ newYearBagCount }}</div>
   </div>
@@ -185,6 +185,12 @@ const setLocalGoodsList = async () => {
     regionOptions.value[curRegionIdx.value].id
   );
   closeToast();
+};
+
+const checkCart = () => {
+  window.wx.miniProgram.navigateTo({
+    url: "/pages/home/subpages/cart/index",
+  });
 };
 </script>
 
