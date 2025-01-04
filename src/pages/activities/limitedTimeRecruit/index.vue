@@ -82,7 +82,12 @@
             <span class="price-unit">¥</span>
             <span>{{ item.price }}</span>
           </div>
-          <img class="add-icon" src="./images/add.png" alt="" />
+          <img
+            class="add-icon"
+            @click.stop="add(item.id)"
+            src="./images/add.png"
+            alt=""
+          />
         </div>
       </div>
     </div>
@@ -117,7 +122,8 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { closeToast, showLoadingToast } from "vant";
+import { closeToast, showLoadingToast, showToast } from "vant";
+import { addCart } from "@/utils/api";
 import { getCategoryOptions, getGoodsList } from "./utils/api";
 
 import type { CategoryOption, Goods } from "./utils/type";
@@ -159,6 +165,12 @@ const setGoodsList = async () => {
   goodsList.value = await getGoodsList(menuList.value[curMenuIdx.value].id);
   closeToast();
 };
+
+const add = async (id: number) => {
+  await addCart(id);
+  showToast("成功添加购物车");
+};
+
 const checkGoods = (id: number) => {
   window.wx.miniProgram.navigateTo({
     url: `/pages/home/subpages/goods-detail/index?id=${id}`,

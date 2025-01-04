@@ -9,7 +9,7 @@
         <span class="price-unit">¥</span>
         <span>{{ info.price }}</span>
       </div>
-      <div class="add-btn" @click="add">加入选购</div>
+      <div class="add-btn" @click.stop="add">加入选购</div>
     </div>
   </div>
 </template>
@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { useStore } from "vuex";
 import { showToast } from "vant";
-import { addCart } from "../utils/api";
+import { addCart } from "@/utils/api";
 import type { Goods } from "../utils/type";
 
 const props = defineProps<{ info: Goods }>();

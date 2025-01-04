@@ -6,3 +6,13 @@ export const getOssConfig = async (): Promise<OssConfig> =>
 
 export const getNewYearBagCount = async () =>
   await http("cart/new_year_goods_number");
+
+export const addCart = async (
+  goodsId: number,
+  selectedSkuIndex = 0,
+  number = 1
+) =>
+  await http("cart/add", {
+    method: "POST",
+    data: { goodsId, selectedSkuIndex, number },
+  });
