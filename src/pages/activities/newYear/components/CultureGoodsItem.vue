@@ -9,16 +9,25 @@
         <span class="price-unit">¥</span>
         <span>{{ info.price }}</span>
       </div>
-      <div class="add-btn" @click="addCart(info.id)">加入选购</div>
+      <div class="add-btn" @click="add">加入选购</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useStore } from "vuex";
+import { showToast } from "vant";
 import { addCart } from "../utils/api";
 import type { Goods } from "../utils/type";
 
-defineProps<{ info: Goods }>();
+const props = defineProps<{ info: Goods }>();
+const store = useStore();
+
+const add = async () => {
+  await addCart(props.info.id);
+  showToast("加入成功");
+  store.dispatch("updateNewYearBagCount");
+};
 
 const checkGoods = (id: number) => {
   window.wx.miniProgram.navigateTo({
