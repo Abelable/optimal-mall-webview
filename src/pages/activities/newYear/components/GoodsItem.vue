@@ -82,7 +82,7 @@ const checkGoods = (id: number) => {
     align-items: center;
     justify-content: space-between;
     padding: 0 0.12rem;
-    width: 2rem;
+    width: 2.1rem;
     height: 0.6rem;
     .price-bg {
       position: absolute;
@@ -105,13 +105,13 @@ const checkGoods = (id: number) => {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 0.8rem;
-      height: 0.26rem;
+      width: 0.9rem;
+      height: 0.3rem;
       color: #691e13;
-      font-size: 0.14rem;
+      font-size: 0.168rem;
       font-weight: 900;
       font-family: STSongti-SC, STSongti-SC;
-      border-radius: 0.13rem;
+      border-radius: 0.15rem;
       background: linear-gradient(106deg, #fcf8df 0%, #edc090 100%);
       box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     }

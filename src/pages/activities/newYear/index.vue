@@ -123,6 +123,7 @@
 </template>
 
 <script setup lang="ts">
+import { closeToast, showLoadingToast } from "vant";
 import GoodsItem from "./components/GoodsItem.vue";
 import CultureGoodsItem from "./components/CultureGoodsItem.vue";
 
@@ -169,9 +170,15 @@ const setRegionOptions = async () => {
   regionOptions.value = await getRegionOptions();
 };
 const setLocalGoodsList = async () => {
+  showLoadingToast({
+    message: "加载中...",
+    duration: 0,
+    forbidClick: true,
+  });
   localGoodsList.value = await getLocalGoodsList(
     regionOptions.value[curRegionIdx.value].id
   );
+  closeToast();
 };
 </script>
 
