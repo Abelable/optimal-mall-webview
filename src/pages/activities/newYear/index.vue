@@ -48,6 +48,11 @@
             <div class="award-name">{{ item }}</div>
           </div>
         </div>
+        <div class="qrcode-wrap">
+          <img class="qrcode" src="./images/qrcode.png" alt="" />
+          <div class="qrcode-desc">添加诚信星球官方客服号领取奖品</div>
+        </div>
+        <div class="note">活动解释权归诚信星球所有</div>
       </div>
     </div>
   </div>
@@ -125,6 +130,23 @@ const awardList = [
             font-weight: 300;
           }
         }
+      }
+      .qrcode-wrap {
+        margin-top: 0.6rem;
+        text-align: center;
+        .qrcode {
+          width: 2rem;
+          height: 2rem;
+        }
+        .qrcode-desc {
+          margin-top: 0.3rem;
+        }
+      }
+      .note {
+        margin-top: 0.5rem;
+        color: #bfbd7d;
+        font-size: 0.2rem;
+        text-align: right;
       }
     }
   }
