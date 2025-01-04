@@ -12,3 +12,13 @@ export const getRegionOptions = async (): Promise<RegionOption[]> =>
 
 export const getLocalGoodsList = async (regionId: number): Promise<Goods[]> =>
   await http("new_year/local_goods_list", { data: { regionId } });
+
+export const addCart = async (
+  goodsId: number,
+  selectedSkuIndex = 0,
+  number = 1
+) =>
+  await http("cart/add", {
+    method: "POST",
+    data: { goodsId, selectedSkuIndex, number },
+  });
