@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="checkGoods(info.id)">
     <img class="goods-bg" src="../images/goods_item_bg.png" alt="" />
     <img class="goods-cover" :src="info.cover" alt="" />
     <div class="goods-name">{{ info.name }}</div>
@@ -19,6 +19,12 @@
 import { Goods } from "../utils/type";
 
 defineProps<{ info: Goods }>();
+
+const checkGoods = (id: number) => {
+  window.wx.miniProgram.navigateTo({
+    url: `/pages/home/subpages/goods-detail/index?id=${id}`,
+  });
+};
 </script>
 
 <style lang="scss" scoped>

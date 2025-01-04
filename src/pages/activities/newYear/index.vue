@@ -96,6 +96,30 @@
     <img class="bag" src="./images/bag.png" alt="" />
     <div class="bag-num">99</div>
   </div>
+
+  <div
+    class="modal-mask"
+    v-if="regionPickerModalVisible"
+    @click="regionPickerModalVisible = false"
+  >
+    <div class="region-picker-modal" @click.stop="">
+      <div class="modal-title">选择地区</div>
+      <div class="region-options">
+        <div
+          class="region-option"
+          :class="{ picked: curRegionIdx === index }"
+          v-for="(item, index) in regionOptions"
+          :key="index"
+          @click="selectRegion(index)"
+        >
+          {{ item.name }}
+        </div>
+      </div>
+      <div class="confirm-btn" @click="regionPickerModalVisible = false">
+        确定
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -314,6 +338,72 @@ const setLocalGoodsList = async () => {
     background: linear-gradient(180deg, #f66b46 0%, #e33825 100%);
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
     border-radius: 0.2rem;
+  }
+}
+
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  .region-picker-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding-bottom: 39px;
+    width: 300px;
+    min-height: 320px;
+    background: #fff;
+    border-radius: 15px;
+    z-index: 100;
+    .modal-title {
+      margin-top: 15px;
+      color: #333;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .region-options {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 15px;
+      padding-right: 0;
+      .region-option {
+        margin-right: 0.3rem;
+        margin-bottom: 0.2rem;
+        padding: 0 0.46rem;
+        height: 0.56rem;
+        width: fit-content;
+        color: #6a6f75;
+        font-size: 0.28rem;
+        line-height: 0.54rem;
+        background: #f1f5f7;
+        border-radius: 0.28rem;
+        border: 1px solid #f1f5f7;
+        &.picked {
+          color: #f5701d;
+          background: #fff3ec;
+          border: 1px solid #f5701d;
+        }
+      }
+    }
+    .confirm-btn {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 43px;
+      color: #1a2040;
+      font-size: 14px;
+      font-weight: 500;
+      border-top: 1px solid #eaecef;
+    }
   }
 }
 </style>
