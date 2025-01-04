@@ -94,7 +94,7 @@
 
   <div class="bag-wrap">
     <img class="bag" src="./images/bag.png" alt="" />
-    <div class="bag-num">99</div>
+    <div class="bag-num" v-show="newYearBagCount">{{ newYearBagCount }}</div>
   </div>
 
   <div
@@ -127,7 +127,8 @@ import { closeToast, showLoadingToast } from "vant";
 import GoodsItem from "./components/GoodsItem.vue";
 import CultureGoodsItem from "./components/CultureGoodsItem.vue";
 
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { useStore } from "vuex";
 import {
   getCultureGoodsList,
   getGoodsList,
@@ -135,6 +136,8 @@ import {
   getRegionOptions,
 } from "./utils/api";
 import type { Goods, RegionOption } from "./utils/type";
+
+const store = useStore();
 
 const awardList = [
   "赤峰小米区域公共品牌内蒙古赤峰大庙镇歆谷乡黄小米5斤",
@@ -148,7 +151,10 @@ const curRegionIdx = ref(0);
 const regionPickerModalVisible = ref(false);
 const localGoodsList = ref<Goods[]>([]);
 
+const newYearBagCount = computed(() => store.state.newYearBagCount);
+
 onMounted(async () => {
+  store.dispatch("updateNewYearBagCount");
   setGoodsList();
   setCultureGoodsList();
   await setRegionOptions();
