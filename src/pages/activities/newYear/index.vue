@@ -56,6 +56,11 @@
       </div>
     </div>
   </div>
+
+  <div class="bag-wrap">
+    <img class="bag" src="./images/bag.png" alt="" />
+    <div class="bag-num">99</div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -149,6 +154,33 @@ const awardList = [
         text-align: right;
       }
     }
+  }
+}
+
+.bag-wrap {
+  position: fixed;
+  right: 0.24rem;
+  bottom: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .bag {
+    width: 1.9rem;
+    height: 1.74rem;
+  }
+  .bag-num {
+    display: flex;
+    align-items: center;
+    margin-top: -0.16rem;
+    padding: 0 0.16rem;
+    width: fit-content;
+    height: 0.4rem;
+    color: #fff;
+    font-size: 0.24rem;
+    line-height: 1;
+    background: linear-gradient(180deg, #f66b46 0%, #e33825 100%);
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 0.2rem;
   }
 }
 </style>
