@@ -17,7 +17,8 @@
     "lodash": "^4.17.21",
     "vant": "^4.7.1",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.191",
