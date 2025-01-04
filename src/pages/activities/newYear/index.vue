@@ -324,7 +324,7 @@ const setLocalGoodsList = async () => {
 .bag-wrap {
   position: fixed;
   right: 0.24rem;
-  bottom: 0.4rem;
+  bottom: 0.8rem;
   display: flex;
   flex-direction: column;
   align-items: center;
