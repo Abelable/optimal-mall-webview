@@ -58,13 +58,16 @@
       <img class="footer-bg" src="./images/footer_bg.png" alt="" />
       <div class="content">
         <p>活动时间：大年初八截止</p>
-        <p style="margin-top: 0.48rem">活动玩法：</p>
+        <p style="margin-top: 0.32rem">活动玩法：</p>
         <p>
           1.在视频号上传一张或者一段，在自己家乡过年的照片或者短视频，里面包含在诚信星球上购买的任意一款产品！
         </p>
         <p>2.编辑文案：我在（自己所在的城市）与诚信星球一起过大年</p>
         <p>3.@（诚信星球）官方视频号</p>
-        <p style="margin-top: 0.48rem">活动奖励：</p>
+        <p>
+          4.活动截止后，会根据视频号内容的“点赞+点心+转发”的数量总和来计算排名奖励
+        </p>
+        <p style="margin-top: 0.32rem">活动奖励：</p>
         <p>一等奖（1名）：乡村振兴农产品3份</p>
         <p>二等奖（2名）：乡村振兴农产品2份</p>
         <p>三等奖（3名）：乡村振兴农产品1份</p>
@@ -283,7 +286,7 @@ const checkCart = () => {
     .content {
       position: absolute;
       left: 50%;
-      top: 2.2rem;
+      top: 2rem;
       transform: translateX(-50%);
       padding: 0.32rem;
       width: 7.1rem;
@@ -293,7 +296,7 @@ const checkCart = () => {
       .award-list {
         display: flex;
         justify-content: space-between;
-        margin-top: 0.48rem;
+        margin-top: 0.32rem;
         .award-item {
           display: flex;
           flex-direction: column;
