@@ -1,5 +1,14 @@
 <template>
-  <div class="container">
+  <div
+    class="container"
+    v-if="userInfo"
+    :style="{
+      'padding-top': userInfo?.level === 1 ? '0.24rem' : '2.1rem',
+      'background-image': `url('https://static.youbozhenxuan.cn/mp/mine_bg_${
+        ['default', 'level_2', 'level_3', 'level_4'][userInfo?.level - 1]
+      }.png')`,
+    }"
+  >
     <!-- <div class="user-info-wrap">
       <img class="avatar" :src="userInfo?.avatar" />
       <div class="user-info">
@@ -16,11 +25,9 @@
     </div> -->
     <div
       class="upgradation-wrap"
-      v-if="userInfo"
+      v-if="userInfo?.level < 4"
       :style="{
-        'background-image': `url(${require(`./images/upgradation_bg_c${
-          userInfo?.level - 1
-        }.png`)})`,
+        'background-image': `url(${require(`./images/upgradation_bg_c${userInfo?.level}.png`)})`,
       }"
     >
       <div class="progress-desc">
@@ -185,8 +192,9 @@ const upgrade = () => {
 .container {
   padding: 0.24rem;
   min-height: 100vh;
-  background-image: url("https://static.youbozhenxuan.cn/mp/mine_bg_default.png");
+  background-color: #fcf9f5;
   background-size: 100%;
+  background-position: 0 -1.5rem;
   background-repeat: no-repeat;
   .user-info-wrap {
     display: flex;
@@ -214,6 +222,7 @@ const upgrade = () => {
     }
   }
   .upgradation-wrap {
+    margin-bottom: 0.24rem;
     padding: 0 0.24rem;
     height: 2rem;
     background-size: calc(100% + 0.32rem) calc(100% + 0.24rem);
@@ -260,7 +269,7 @@ const upgrade = () => {
     }
   }
   .account-amount {
-    margin-top: 0.24rem;
+    margin-bottom: 0.24rem;
     padding: 0.24rem;
     padding-bottom: 0.48rem;
     background: #fff;
@@ -298,7 +307,6 @@ const upgrade = () => {
     }
   }
   .promoter-data-wrap {
-    margin-top: 0.24rem;
     padding: 0.24rem;
     border-radius: 0.16rem;
     background: #fff;
