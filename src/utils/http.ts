@@ -32,7 +32,16 @@ export const http = async (
     .fetch(`${baseUrl}/api/${version}/${endpoint}`, config)
     .then(async (response) => {
       const data = await response.json();
-      if (response.ok && data.code === 0) return data.data;
-      else return Promise.reject(data);
+      if (response.ok && data.code === 0) {
+        return data.data;
+      } else {
+        if (response.status === 403 && data.code === 10002 && !token) {
+          window.wx.miniProgram.navigateTo({
+            url: `/pages/common/register`,
+          });
+        } else {
+          return Promise.reject(data);
+        }
+      }
     });
 };

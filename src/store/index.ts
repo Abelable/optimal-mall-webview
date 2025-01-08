@@ -13,8 +13,11 @@ export default createStore({
   },
   actions: {
     async updateNewYearBagCount(context) {
-      const newYearBagCount = await getNewYearBagCount();
-      context.commit("setNewYearBagCount", newYearBagCount);
+      const token = localStorage.getItem("token") || "";
+      if (token) {
+        const newYearBagCount = await getNewYearBagCount();
+        context.commit("setNewYearBagCount", newYearBagCount);
+      }
     },
   },
   modules: {},
