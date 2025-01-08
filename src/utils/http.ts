@@ -37,7 +37,7 @@ export const http = async (
       } else {
         if (response.status === 403 && data.code === 10002 && !token) {
           window.wx.miniProgram.navigateTo({
-            url: `/pages/common/register`,
+            url: "/pages/common/register/index",
           });
         } else {
           return Promise.reject(data);

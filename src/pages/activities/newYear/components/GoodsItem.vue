@@ -25,9 +25,11 @@ const props = defineProps<{ info: Goods }>();
 const store = useStore();
 
 const add = async () => {
-  await addCart(props.info.id);
-  showToast("加入成功");
-  store.dispatch("updateNewYearBagCount");
+  const cartCount = await addCart(props.info.id);
+  if (cartCount) {
+    showToast("加入成功");
+    store.dispatch("updateNewYearBagCount");
+  }
 };
 
 const checkGoods = (id: number) => {
