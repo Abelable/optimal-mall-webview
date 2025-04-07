@@ -38,7 +38,7 @@
             :item="item"
           />
         </div>
-        <Empty v-if="!newList.length" description="暂无新增推广员" />
+        <Empty v-if="!newList.length" description="暂无新增推荐官" />
       </div>
 
       <div v-if="curMenuIdx === 1">
@@ -49,7 +49,7 @@
             :item="item"
           />
         </div>
-        <Empty v-if="!orderingList.length" description="暂无下单推广员" />
+        <Empty v-if="!orderingList.length" description="暂无下单推荐官" />
       </div>
     </div>
     <div v-if="curMenuIdx === 2 || searching">
@@ -67,7 +67,7 @@
             :item="item"
           />
         </List>
-        <Empty v-if="!allList.length" description="暂无推广员" />
+        <Empty v-if="!allList.length" description="暂无推荐官" />
       </PullRefresh>
     </div>
   </div>

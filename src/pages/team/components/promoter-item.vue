@@ -8,7 +8,7 @@
           {{ `${item.mobile.slice(0, 3)}****${item.mobile.slice(-4)}` }}
         </div>
         <div class="num-desc">
-          诚信星球第{{ item.promoterId }}号乡村振兴推广员
+          诚信星球第{{ item.promoterId }}号乡村振兴推荐官
         </div>
       </div>
     </div>
@@ -28,7 +28,7 @@
       }"
       v-if="item.level"
     >
-      {{ ["推广员", "c1", "c2", "c3"][item.level - 1] }}
+      {{ ["推荐官", "c1", "c2", "c3"][item.level - 1] }}
     </div>
   </div>
 </template>

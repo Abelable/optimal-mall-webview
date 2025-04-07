@@ -37,7 +37,7 @@ const team: Array<RouteRecordRaw> = [
     path: "/team/promoter",
     name: "team_promoter",
     meta: {
-      title: "我的推广员",
+      title: "我的推荐官",
     },
     component: () => import("@/pages/team/subpages/promoter.vue"),
   },

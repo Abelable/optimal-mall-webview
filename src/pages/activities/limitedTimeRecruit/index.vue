@@ -5,7 +5,7 @@
       <div class="card">
         <div class="card-title">
           <img class="leaf" src="./images/left_leaf.png" alt="" />
-          <div>乡村振兴推广员的权益</div>
+          <div>乡村振兴推荐官的权益</div>
           <img class="leaf" src="./images/right_leaf.png" alt="" />
         </div>
         <div class="rights-wrap">
@@ -40,7 +40,7 @@
       <div class="card">
         <div class="notice-title">活动期间</div>
         <div class="notice-content">
-          任意购买一款下方产品即可成为乡村振兴推广员
+          任意购买一款下方产品即可成为乡村振兴推荐官
         </div>
       </div>
     </div>

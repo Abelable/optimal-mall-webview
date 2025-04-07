@@ -18,7 +18,7 @@
         <div class="user-mobile">{{ mobile }}</div>
         <div class="user-identity">
           诚信星球第{{ userInfo?.promoterId }}号乡村振兴{{
-            userInfo?.level === 1 ? "推广员" : "服务商"
+            userInfo?.level === 1 ? "推荐官" : "服务商"
           }}
         </div>
       </div>
@@ -82,24 +82,24 @@
     </div>
     <div class="promoter-data-wrap" @click="checkMyPromoters(0)">
       <div class="promoter-title-wrap">
-        <div class="promoter-title">我的推广员</div>
+        <div class="promoter-title">我的推荐官</div>
         <img class="more-icon" src="./images/arrow.png" alt="" />
       </div>
       <div class="promoter-data-list">
         <div class="promoter-data-item" @click.stop="checkMyPromoters(1)">
-          <div class="promoter-data-desc">今日新增推广员数</div>
+          <div class="promoter-data-desc">今日新增推荐官数</div>
           <div class="promoter-data">
             {{ promoterData?.todayNewCount || "-" }}
           </div>
         </div>
         <div class="promoter-data-item" @click.stop="checkMyPromoters(2)">
-          <div class="promoter-data-desc">今日下单推广员数</div>
+          <div class="promoter-data-desc">今日下单推荐官数</div>
           <div class="promoter-data">
             {{ promoterData?.todayOrderingCount || "-" }}
           </div>
         </div>
         <div class="promoter-data-item" @click.stop="checkMyPromoters(3)">
-          <div class="promoter-data-desc">累积推广员总数</div>
+          <div class="promoter-data-desc">累积推荐官总数</div>
           <div class="promoter-data">{{ promoterData?.totalCount || "-" }}</div>
         </div>
       </div>
