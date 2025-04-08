@@ -33,7 +33,7 @@
       <div class="progress-desc">
         <span>距离C{{ userInfo?.level }}，仅差</span>
         <span style="color: #f5701d">
-          {{ 100 - (achievementInfo?.percent || 0) }}%</span
+          {{ (100 - (achievementInfo?.percent || 0)).toFixed(2) }}%</span
         >
       </div>
       <div class="progress-bar-wrap">
@@ -44,7 +44,9 @@
             :style="{ width: `${achievementInfo?.percent}%` }"
           ></div>
         </div>
-        <div class="progress-bar-tips">{{ achievementInfo?.percent }}%</div>
+        <div class="progress-bar-tips">
+          {{ achievementInfo?.percent.toFixed(2) }}%
+        </div>
         <div class="upgrade-btn" @click="upgrade">
           {{
             achievementInfo?.percent === 100 && !userInfo.enterpriseInfoId
