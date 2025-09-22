@@ -3,9 +3,7 @@
     <div class="amount-card">
       <div class="amount-total">
         <div class="amount-title-wrap row between">
-          <div class="amount-title">
-            {{ level > 1 ? "可提现金额" : "分享奖励" }}
-          </div>
+          <div class="amount-title">可提现金额</div>
           <div class="withdraw-record-btn" @click="checkWithdrawRecord">
             提现明细
           </div>
@@ -19,10 +17,41 @@
                 : "0.00"
             }}</span>
           </div>
-          <div class="type-withdraw-btn" @click="withdraw">提现</div>
+          <div
+            class="type-withdraw-btn"
+            :class="btnActive ? 'active' : ''"
+            @click="withdraw"
+          >
+            提现
+          </div>
         </div>
       </div>
-      <div class="amount-type-wrap row" v-if="level > 1">
+      <div class="points-exchange row">
+        <div class="points-info">
+          <div class="points-title row">
+            <img
+              class="point-icon"
+              src="https://static.chengxinxingqiu.cn/mp/points/icon.png"
+            />
+            <div>
+              兑换为{{
+                cashInfo
+                  ? ((+cashInfo?.share + +cashInfo?.team) * 100).toFixed(0)
+                  : 0
+              }}积分
+            </div>
+          </div>
+          <div class="points-desc">可用于下单抵扣，积分商城福利换购</div>
+        </div>
+        <div
+          class="exchange-btn"
+          :class="btnActive ? 'active' : ''"
+          @click="showPointPopup"
+        >
+          兑换
+        </div>
+      </div>
+      <div class="amount-type-wrap row">
         <div class="amount-type-item">
           <div class="amount-type-name">分享奖励</div>
           <div class="type-amount">
@@ -30,7 +59,7 @@
             <span>{{ cashInfo ? cashInfo.share : "0.00" }}</span>
           </div>
         </div>
-        <div class="amount-type-item">
+        <div class="amount-type-item" v-if="level > 1">
           <div class="amount-type-name">团队奖励</div>
           <div class="type-amount">
             <span style="font-size: 0.28rem">¥</span>
@@ -169,10 +198,25 @@
       <Empty v-if="!orderList.length" description="暂无订单记录" />
     </PullRefresh>
   </div>
+
+  <PointPopup
+    :visible="pointPopupVisible"
+    :amount="cashInfo ? +cashInfo?.share + +cashInfo?.team : 0"
+    @success="exchangeSuccess"
+    @cancel="pointPopupVisible = false"
+  />
 </template>
 
 <script setup lang="ts">
-import { PullRefresh, List, Empty, closeToast, showLoadingToast } from "vant";
+import {
+  PullRefresh,
+  List,
+  Empty,
+  closeToast,
+  showLoadingToast,
+  showConfirmDialog,
+} from "vant";
+import PointPopup from "../components/PointPopup.vue";
 
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -183,12 +227,14 @@ import {
   getGiftOrderList,
   getTeamCommissionTimeData,
   getTeamOrderList,
+  getUserInfo,
 } from "../utils/api";
 
 import type {
   CommissionCashInfo,
   Order,
   CommissionTimeData,
+  UserInfo,
 } from "../utils/type";
 
 const route = useRoute();
@@ -207,17 +253,31 @@ const dateList = [
 const curDateIdx = ref(0);
 const timeData = ref<CommissionTimeData>();
 
+const userInfo = ref<UserInfo>();
 const loading = ref(false);
 const finished = ref(false);
 const refreshing = ref(false);
 const orderList = ref<Order[]>([]);
+const btnActive = ref(false);
+const pointPopupVisible = ref(false);
 
 onMounted(() => {
   level.value = +(route.query?.level as string);
+  setUserInfo();
   setCommissionCashInfo();
   setTimeData();
+
+  const date = new Date().getDate();
+  if (date >= 25) {
+    btnActive.value = true;
+  }
 });
 
+const init = () => {
+  setCommissionCashInfo();
+  setTimeData();
+  setOrderList(true);
+};
 const onRefresh = () => setOrderList(true);
 const onLoadMore = () => setOrderList();
 
@@ -225,7 +285,30 @@ const setCommissionCashInfo = async () => {
   cashInfo.value = await getCommissionCashInfo();
 };
 
+const showPointPopup = () => {
+  if (!btnActive.value) {
+    return;
+  }
+  if (!userInfo.value?.authInfoId) {
+    showConfirmDialog({
+      title: "温馨提示",
+      message: "为了您的账户安全，请您先完成实名认证",
+    }).then(() => {
+      router.push("/auth");
+    });
+    return;
+  }
+  pointPopupVisible.value = true;
+};
+const exchangeSuccess = () => {
+  init();
+  pointPopupVisible.value = false;
+};
+
 const withdraw = () => {
+  if (!btnActive.value) {
+    return;
+  }
   const { share, team } = cashInfo.value || {};
   window.wx.miniProgram.navigateTo({
     url: `/pages/mine/subpages/account/subpages/withdraw/index?scene=3&amount=${
@@ -263,6 +346,10 @@ const setTimeData = async () => {
       dateList[curDateIdx.value].value
     );
   }
+};
+
+const setUserInfo = async () => {
+  userInfo.value = await getUserInfo();
 };
 
 const setOrderList = (init = false) => {
@@ -374,6 +461,48 @@ const setTeamOrderList = async (init = false) => {
         font-weight: bold;
       }
     }
+    .points-exchange {
+      padding: 0.32rem;
+      .points-info {
+        flex: 1;
+        .points-title {
+          color: #333;
+          font-size: 0.3rem;
+          font-weight: bold;
+          .point-icon {
+            margin-right: 0.06rem;
+            width: 0.36rem;
+            height: 0.36rem;
+          }
+        }
+        .points-desc {
+          margin-top: 0.08rem;
+          color: #666;
+          font-size: 0.24rem;
+          font-weight: 300;
+        }
+      }
+      .exchange-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.16rem;
+        height: 0.48rem;
+        color: #999;
+        font-size: 0.24rem;
+        background: #e9e9e9;
+        border-radius: 0.24rem;
+        &.active {
+          color: #fff;
+          background: linear-gradient(
+            135deg,
+            #ffa266 0%,
+            #ff3d39 64%,
+            #ff3636 100%
+          );
+        }
+      }
+    }
     .amount-type-wrap {
       padding: 0.32rem 0.4rem;
       background: #fff;
@@ -399,15 +528,19 @@ const setTeamOrderList = async (init = false) => {
       margin-left: 0.24rem;
       width: 1.16rem;
       height: 0.48rem;
-      color: #fff;
+      color: #999;
       font-size: 0.24rem;
-      background: linear-gradient(
-        135deg,
-        #ffa266 0%,
-        #ff3d39 64%,
-        #ff3636 100%
-      );
+      background: #e9e9e9;
       border-radius: 0.24rem;
+      &.active {
+        color: #fff;
+        background: linear-gradient(
+          135deg,
+          #ffa266 0%,
+          #ff3d39 64%,
+          #ff3636 100%
+        );
+      }
     }
     .withdraw-tips-wrap {
       padding: 0.24rem 0.2rem;

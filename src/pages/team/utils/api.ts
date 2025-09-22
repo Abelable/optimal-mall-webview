@@ -112,3 +112,9 @@ export const editEnterpriseInfo = async (
     method: "POST",
     data: enterpriseInfo,
   });
+
+export const applyExchangePoint = async (withdrawAmount: number) =>
+  await http("withdraw/exchange_point", {
+    method: "POST",
+    data: { withdrawAmount, scene: 3 },
+  });

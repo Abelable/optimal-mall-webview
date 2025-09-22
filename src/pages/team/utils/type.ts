@@ -6,6 +6,7 @@ export interface UserInfo {
   mobile: string;
   promoterId: number;
   enterpriseInfoId: number;
+  authInfoId?: number;
 }
 
 export interface CommissionSumInfo {
