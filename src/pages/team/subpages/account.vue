@@ -433,7 +433,7 @@ const setTeamOrderList = async (init = false) => {
       position: relative;
       padding: 0.32rem;
       height: 1.8rem;
-      background-image: url("https://static.youbozhenxuan.cn/mp/account_amount_bg.png");
+      background-image: url("https://static.chengxinxingqiu.cn/mp/account_amount_bg.png");
       background-position: -0.2rem -0.2rem;
       background-size: calc(100% + 0.4rem) calc(100% + 0.4rem);
       background-repeat: no-repeat;

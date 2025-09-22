@@ -4,7 +4,7 @@
     v-if="userInfo"
     :style="{
       'padding-top': userInfo?.level === 1 ? '0.24rem' : '2.1rem',
-      'background-image': `url('https://static.youbozhenxuan.cn/mp/mine_bg_${
+      'background-image': `url('https://static.chengxinxingqiu.cn/mp/mine_bg_${
         ['default', 'level_2', 'level_3', 'level_4'][userInfo?.level - 1]
       }.png')`,
     }"
