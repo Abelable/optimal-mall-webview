@@ -17,6 +17,14 @@ const agreements: Array<RouteRecordRaw> = [
     },
     component: () => import("@/pages/agreements/withdrawRules.vue"),
   },
+  {
+    path: "/agreements/point_service",
+    name: "point_service",
+    meta: {
+      title: "积分兑换协议",
+    },
+    component: () => import("@/pages/agreements/pointService.vue"),
+  },
 ];
 
 export default agreements;
