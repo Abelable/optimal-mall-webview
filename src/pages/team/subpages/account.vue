@@ -208,14 +208,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  PullRefresh,
-  List,
-  Empty,
-  closeToast,
-  showLoadingToast,
-  showConfirmDialog,
-} from "vant";
+import { PullRefresh, List, Empty, closeToast, showLoadingToast } from "vant";
 import PointPopup from "../components/PointPopup.vue";
 
 import { onMounted, ref } from "vue";
@@ -227,14 +220,12 @@ import {
   getGiftOrderList,
   getTeamCommissionTimeData,
   getTeamOrderList,
-  getUserInfo,
 } from "../utils/api";
 
 import type {
   CommissionCashInfo,
   Order,
   CommissionTimeData,
-  UserInfo,
 } from "../utils/type";
 
 const route = useRoute();
@@ -253,7 +244,6 @@ const dateList = [
 const curDateIdx = ref(0);
 const timeData = ref<CommissionTimeData>();
 
-const userInfo = ref<UserInfo>();
 const loading = ref(false);
 const finished = ref(false);
 const refreshing = ref(false);
@@ -263,7 +253,6 @@ const pointPopupVisible = ref(false);
 
 onMounted(() => {
   level.value = +(route.query?.level as string);
-  setUserInfo();
   setCommissionCashInfo();
   setTimeData();
 
@@ -287,15 +276,6 @@ const setCommissionCashInfo = async () => {
 
 const showPointPopup = () => {
   if (!btnActive.value) {
-    return;
-  }
-  if (!userInfo.value?.authInfoId) {
-    showConfirmDialog({
-      title: "温馨提示",
-      message: "为了您的账户安全，请您先完成实名认证",
-    }).then(() => {
-      router.push("/auth");
-    });
     return;
   }
   pointPopupVisible.value = true;
@@ -346,10 +326,6 @@ const setTimeData = async () => {
       dateList[curDateIdx.value].value
     );
   }
-};
-
-const setUserInfo = async () => {
-  userInfo.value = await getUserInfo();
 };
 
 const setOrderList = (init = false) => {

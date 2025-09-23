@@ -60,6 +60,10 @@ const router = useRouter();
 const agree = ref(false);
 
 const exchange = async () => {
+  if (props.amount === 0) {
+    return;
+  }
+
   if (!agree.value) {
     showToast("请阅读并同意积分兑换协议");
     return;
