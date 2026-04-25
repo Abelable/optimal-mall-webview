@@ -35,9 +35,9 @@ export const http = async (
       if (response.ok && data.code === 0) {
         return data.data;
       } else {
-        if (response.status === 403 && data.code === 10002 && !token) {
+        if (response.status === 403 && !token) {
           window.wx.miniProgram.navigateTo({
-            url: "/pages/common/register/index",
+            url: "/pages/subpages/common/register/index",
           });
         } else {
           return Promise.reject(data);
